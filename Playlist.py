@@ -36,8 +36,7 @@ class Playlist:
     def get_playlist(self):
         # Request to heroku server to get spotify playlist info
         data = {'username':self.playlist_username, 'playlist':self.playlist_playlistname}
-        #playlist = requests.get('https://playlist-recommender.herokuapp.com/get_playlist')
-        playlist = requests.get('http://localhost:3003/get_playlist', data)
+        playlist = requests.get('https://playlist-recommender.herokuapp.com/get_playlist', data)
         playlist = playlist.json()
 
         self.playlist_song_names = playlist[0]
@@ -50,7 +49,7 @@ class Playlist:
         song_uris = ','.join(song_uris)
 
         data = {'song_uri': song_uris}
-        attributes = requests.get('http://localhost:3003/song_attributes', data);
+        attributes = requests.get('https://playlist-recommender.herokuapp.com/song_attributes', data);
         attributes = attributes.json()
 
         self.playlist_accousticness = attributes[0]
