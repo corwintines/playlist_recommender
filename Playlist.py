@@ -64,6 +64,14 @@ class Playlist:
     
     
     def generate_playlist_vector(self):
+        accousticness = 0
+        dancibility = 0
+        energy = 0
+        instrumentalness = 0
+        loudness = 0
+        speechiness = 0
+        tempo = 0
+        valence = 0
         for element in range(0, len(self.playlist_song_names)):
             accousticness += self.playlist_accousticness[element]
             dancibility += self.playlist_dancibility[element]
@@ -74,7 +82,7 @@ class Playlist:
             tempo += self.playlist_tempo[element]
             valence += self.playlist_valence[element]
     
-        self.playlist_attribute_vector = [accousticness/len(self.playlist_accousticness), dancibility/len(self.playlist_dancibility), energy/len(self.playlist_energy), instrumentalness/len(self.playlist_instrumentalness), loudness/len(self.playlist_loudness), speechiness/len(self.playlist_speechiness), tempo/len(self.playlist_tempo), valence/len(self.playlist_valnce)]
+        self.playlist_attribute_vector = [accousticness/len(self.playlist_accousticness), dancibility/len(self.playlist_dancibility), energy/len(self.playlist_energy), instrumentalness/len(self.playlist_instrumentalness), loudness/len(self.playlist_loudness), speechiness/len(self.playlist_speechness), tempo/len(self.playlist_tempo), valence/len(self.playlist_valence)]
         
         
     def find_cluster(self):
