@@ -1,12 +1,12 @@
 import requests
 
-class Playlist: 
+class Playlist:
     def __init__(self, username, playlistname):
         # Spotify username
         self.playlist_username = username
         # Spotify playlist name
         self.playlist_playlistname = playlistname
-        # Cluster that this playlist would be found in 
+        # Cluster that this playlist would be found in
         self.playlist_cluster_index = None
         # Average attribute vector for playlist used to find its cluster
         self.playlist_attribute_vector = None
@@ -31,28 +31,28 @@ class Playlist:
         self.playlist_tempo = None
         # A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).
         self.playlist_valence = None
-        
-        
+
+
     def get_playlist(self):
         # Request to heroku server to get spotify playlist info
         data = {'username':self.playlist_username, 'playlist':self.playlist_playlistname}
         #playlist = requests.get('https://playlist-recommender.herokuapp.com/get_playlist')
         playlist = requests.get('http://localhost:3003/get_playlist', data)
         playlist = playlist.json()
-        
+
         self.playlist_song_names = playlist[0]
         self.playlist_song_artists = playlist[1]
-        
+
         song_uris = []
         for song in playlist[2]:
             song_uris.append(song.split(':')[2])
-            
+
         song_uris = ','.join(song_uris)
-            
+
         data = {'song_uri': song_uris}
         attributes = requests.get('http://localhost:3003/song_attributes', data);
         attributes = attributes.json()
-        
+
         self.playlist_accousticness = attributes[0]
         self.playlist_dancibility = attributes[1]
         self.playlist_energy = attributes[2]
@@ -60,9 +60,9 @@ class Playlist:
         self.playlist_instrumentalness = attributes[4]
         self.playlist_speechness = attributes[5]
         self.playlist_tempo = attributes[6]
-        self.playlist_valence = attributes[7]        
-    
-    
+        self.playlist_valence = attributes[7]
+
+
     def generate_playlist_vector(self):
         accousticness = 0
         dancibility = 0
@@ -81,14 +81,13 @@ class Playlist:
             speechiness += self.playlist_speechness[element]
             tempo += self.playlist_tempo[element]
             valence += self.playlist_valence[element]
-    
+
         self.playlist_attribute_vector = [accousticness/len(self.playlist_accousticness), dancibility/len(self.playlist_dancibility), energy/len(self.playlist_energy), instrumentalness/len(self.playlist_instrumentalness), loudness/len(self.playlist_loudness), speechiness/len(self.playlist_speechness), tempo/len(self.playlist_tempo), valence/len(self.playlist_valence)]
-        
-        
+
+
     def find_cluster(self):
         print(self.playlist_cluster_index)
-        
-        
+
+
     def trim_outliers(self):
         print("Trim")
-    
