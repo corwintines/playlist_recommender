@@ -1,3 +1,5 @@
+import requests
+
 class TrainingPlaylist:
     def __init__(self, username, playlistname):
         # Spotify username
@@ -38,4 +40,31 @@ class TrainingPlaylist:
         self.groundtruth_tempo = None
         self.groundtruth_valence = None
 
-        
+
+    def get_playlist(self):
+        # Request to heroku server to get spotify playlist info
+        data = {'username':self.playlist_username, 'playlist':self.playlist_playlistname}
+        playlist = requests.get('https://playlist-recommender.herokuapp.com/get_playlist', data)
+        playlist = playlist.json()
+
+        self.playlist_song_names = playlist[0]
+        self.playlist_song_artists = playlist[1]
+
+        song_uris = []
+        for song in playlist[2]:
+            song_uris.append(song.split(':')[2])
+
+        song_uris = ','.join(song_uris)
+
+        data = {'song_uri': song_uris}
+        attributes = requests.get('https://playlist-recommender.herokuapp.com/song_attributes', data);
+        attributes = attributes.json()
+
+        self.playlist_accousticness = attributes[0]
+        self.playlist_dancibility = attributes[1]
+        self.playlist_energy = attributes[2]
+        self.playlist_loudness = attributes[3]
+        self.playlist_instrumentalness = attributes[4]
+        self.playlist_speechness = attributes[5]
+        self.playlist_tempo = attributes[6]
+        self.playlist_valence = attributes[7]
