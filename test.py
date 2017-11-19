@@ -8,4 +8,4 @@ from TrainingPlaylist import TrainingPlaylist
 
 t = TrainingPlaylist('spotify','37i9dQZF1DX76Wlfdnj7AP')
 t.get_playlist()
-print t.playlist_song_names
+t.construct_training_groundtruths()

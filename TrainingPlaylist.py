@@ -18,27 +18,28 @@ class TrainingPlaylist:
         self.playlist_tempo = None
         self.playlist_valence = None
 
-        self.training_song_names = None
-        self.training_song_artists = None
-        self.training_accousticness = None
-        self.training_dancibility = None
-        self.training_energy = None
-        self.training_instrumentalness = None
-        self.training_loudness = None
-        self.training_speechiness = None
-        self.training_tempo = None
-        self.training_valence = None
+        self.training_song_names = []
+        self.training_song_artists = []
+        self.training_attribute_vector = None
+        self.training_accousticness = []
+        self.training_dancibility = []
+        self.training_energy = []
+        self.training_instrumentalness = []
+        self.training_loudness = []
+        self.training_speechiness = []
+        self.training_tempo = []
+        self.training_valence = []
 
-        self.groundtruth_song_names = None
-        self.groundtruth_song_artists = None
-        self.groundtruth_accousticness = None
-        self.groundtruth_dancibility = None
-        self.groundtruth_energy = None
-        self.groundtruth_instrumentalness = None
-        self.groundtruth_loudness = None
-        self.groundtruth_speechness = None
-        self.groundtruth_tempo = None
-        self.groundtruth_valence = None
+        self.groundtruth_song_names = []
+        self.groundtruth_song_artists = []
+        self.groundtruth_accousticness = []
+        self.groundtruth_dancibility = []
+        self.groundtruth_energy = []
+        self.groundtruth_instrumentalness = []
+        self.groundtruth_loudness = []
+        self.groundtruth_speechness = []
+        self.groundtruth_tempo = []
+        self.groundtruth_valence = []
 
 
     def get_playlist(self):
@@ -68,3 +69,30 @@ class TrainingPlaylist:
         self.playlist_speechness = attributes[5]
         self.playlist_tempo = attributes[6]
         self.playlist_valence = attributes[7]
+
+
+    def construct_training_groundtruths(self):
+        for song in range(0, len(self.playlist_song_names)):
+            if song%5 is 0:
+                self.groundtruth_song_names.append(self.playlist_song_names[song])
+                self.groundtruth_song_artists.append(self.playlist_song_artists[song])
+                self.groundtruth_accousticness.append(self.playlist_accousticness[song])
+                self.groundtruth_dancibility.append(self.playlist_dancibility[song])
+                self.groundtruth_energy.append(self.playlist_energy[song])
+                self.groundtruth_loudness.append(self.playlist_loudness[song])
+                self.groundtruth_instrumentalness.append(self.playlist_instrumentalness[song])
+                self.groundtruth_speechness.append(self.playlist_speechness[song])
+                self.groundtruth_tempo.append(self.playlist_tempo[song])
+                self.groundtruth_valence.append(self.playlist_valence[song])
+
+            else:
+                self.training_song_names.append(self.playlist_song_names[song])
+                self.training_song_artists.append(self.playlist_song_artists[song])
+                self.training_accousticness.append(self.playlist_accousticness[song])
+                self.training_dancibility.append(self.playlist_dancibility[song])
+                self.training_energy.append(self.playlist_energy[song])
+                self.training_loudness.append(self.playlist_loudness[song])
+                self.training_instrumentalness.append(self.playlist_instrumentalness[song])
+                self.training_speechiness.append(self.playlist_speechness[song])
+                self.training_tempo.append(self.playlist_tempo[song])
+                self.training_valence.append(self.playlist_valence[song])
