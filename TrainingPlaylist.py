@@ -21,6 +21,7 @@ class TrainingPlaylist:
         self.training_song_names = []
         self.training_song_artists = []
         self.training_attribute_vector = None
+        self.training_cluster_index = None
         self.training_accousticness = []
         self.training_dancibility = []
         self.training_energy = []
@@ -118,3 +119,10 @@ class TrainingPlaylist:
             valence += self.training_valence[element]
 
         self.training_attribute_vector = [accousticness/len(self.training_accousticness), dancibility/len(self.training_dancibility), energy/len(self.training_energy), instrumentalness/len(self.training_instrumentalness), loudness/len(self.training_loudness), speechiness/len(self.training_speechiness), tempo/len(self.training_tempo), valence/len(self.training_valence)]
+
+    def find_cluster(self):
+        print(self.training_cluster_index)
+
+
+    def trim_outliers(self):
+        print("Trim")

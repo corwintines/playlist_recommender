@@ -11,3 +11,5 @@ t.get_playlist()
 t.construct_training_groundtruths()
 t.generate_playlist_vector()
 print t.training_attribute_vector
+t.find_cluster()
+t.trim_outliers()
