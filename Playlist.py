@@ -14,6 +14,7 @@ class Playlist:
         Arrays for the attribute values for every song in the playlist
         '''
         self.playlist_song_names = None
+        self.playlist_song_artists = None
         # A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic.
         self.playlist_accousticness = None
         # Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
@@ -34,9 +35,32 @@ class Playlist:
         
     def get_playlist(self):
         # Request to heroku server to get spotify playlist info
-        # playlist = requests.get()
-        # return playlist
-        print("get playlist")
+        data = {'username':self.playlist_username, 'playlist':self.playlist_playlistname}
+        #playlist = requests.get('https://playlist-recommender.herokuapp.com/get_playlist')
+        playlist = requests.get('http://localhost:3003/get_playlist', data)
+        playlist = playlist.json()
+        
+        self.playlist_song_names = playlist[0]
+        self.playlist_song_artists = playlist[1]
+        
+        song_uris = []
+        for song in playlist[2]:
+            song_uris.append(song.split(':')[2])
+            
+        song_uris = ','.join(song_uris)
+            
+        data = {'song_uri': song_uris}
+        attributes = requests.get('http://localhost:3003/song_attributes', data);
+        attributes = attributes.json()
+        
+        self.playlist_accousticness = attributes[0]
+        self.playlist_dancibility = attributes[1]
+        self.playlist_energy = attributes[2]
+        self.playlist_loudness = attributes[3]
+        self.playlist_instrumentalness = attributes[4]
+        self.playlist_speechness = attributes[5]
+        self.playlist_tempo = attributes[6]
+        self.playlist_valence = attributes[7]        
     
     
     def generate_playlist_vector(self):
