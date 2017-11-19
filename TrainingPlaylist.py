@@ -96,3 +96,25 @@ class TrainingPlaylist:
                 self.training_speechiness.append(self.playlist_speechness[song])
                 self.training_tempo.append(self.playlist_tempo[song])
                 self.training_valence.append(self.playlist_valence[song])
+
+
+    def generate_playlist_vector(self):
+        accousticness = 0
+        dancibility = 0
+        energy = 0
+        instrumentalness = 0
+        loudness = 0
+        speechiness = 0
+        tempo = 0
+        valence = 0
+        for element in range(0, len(self.training_song_names)):
+            accousticness += self.training_accousticness[element]
+            dancibility += self.training_dancibility[element]
+            energy += self.training_energy[element]
+            instrumentalness += self.training_instrumentalness[element]
+            loudness += self.training_loudness[element]
+            speechiness += self.training_speechiness[element]
+            tempo += self.training_tempo[element]
+            valence += self.training_valence[element]
+
+        self.training_attribute_vector = [accousticness/len(self.training_accousticness), dancibility/len(self.training_dancibility), energy/len(self.training_energy), instrumentalness/len(self.training_instrumentalness), loudness/len(self.training_loudness), speechiness/len(self.training_speechiness), tempo/len(self.training_tempo), valence/len(self.training_valence)]

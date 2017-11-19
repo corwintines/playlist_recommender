@@ -9,3 +9,5 @@ from TrainingPlaylist import TrainingPlaylist
 t = TrainingPlaylist('spotify','37i9dQZF1DX76Wlfdnj7AP')
 t.get_playlist()
 t.construct_training_groundtruths()
+t.generate_playlist_vector()
+print t.training_attribute_vector
