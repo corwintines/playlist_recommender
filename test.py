@@ -1,6 +1,7 @@
 from Playlist import Playlist
 from TrainingPlaylist import TrainingPlaylist
 from dataset_processing import *
+from k_means_clustering_dataset import *
 
 # p = Playlist('spotify','37i9dQZF1DWZeKCadgRdKQ')
 # p = Playlist('spotify','37i9dQZF1DX76Wlfdnj7AP')
@@ -17,5 +18,7 @@ from dataset_processing import *
 # t.trim_outliers()
 
 song_data = query_spotify_for_attributes()
-k_means_labels, k_means_centroids =
+k_means_labels, k_means_centroids = cluster_data(song_data)
 combined_cluster_song_data = combine_cluster_song_data(song_data, k_means_labels)
+print(combined_cluster_song_data)
+print(k_means_centroids)
