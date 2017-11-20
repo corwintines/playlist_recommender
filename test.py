@@ -20,5 +20,3 @@ from k_means_clustering_dataset import *
 song_data = query_spotify_for_attributes()
 k_means_labels, k_means_centroids = cluster_data(song_data)
 combined_cluster_song_data = combine_cluster_song_data(song_data, k_means_labels)
-print(combined_cluster_song_data)
-print(k_means_centroids)

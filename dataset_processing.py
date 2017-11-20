@@ -9,8 +9,7 @@ def query_spotify_for_attributes():
     MSD_song_attributes = []
     MSD_song_final = []
 
-    for song in range(0, 100):
-        print song
+    for song in range(0, len(MSD_song_list)):
         data = {'artist': MSD_song_list[song][1], 'songname': MSD_song_list[song][0]}
         attributes = requests.get('https://playlist-recommender.herokuapp.com/spotify_tracks', data)
         uri = attributes.text
@@ -20,7 +19,6 @@ def query_spotify_for_attributes():
             uri = uri.split(':')[2]
             data = {'song_uri': uri}
             attributes = requests.get('https://playlist-recommender.herokuapp.com/get_track_attributes', data)
-            print(attributes)
             attributes = attributes.json()
             MSD_song_attributes.append(attributes)
 
