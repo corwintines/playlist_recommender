@@ -36,3 +36,19 @@ def query_spotify_for_attributes():
             ])
 
     return MSD_song_final
+
+def combine_cluster_song_data(song_data, label_data):
+    combined_data = []
+    for elem in range(0, len(song_data)):
+        data = [
+        label_data[elem],
+        song_data[elem][0],
+        song_data[elem][1],
+        song_data[elem][2],
+        song_data[elem][3],
+        song_data[elem][4],
+        song_data[elem][5]
+        ]
+        combined_data.append(data)
+
+    return combined_data

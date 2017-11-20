@@ -16,4 +16,6 @@ from dataset_processing import *
 # t.find_cluster()
 # t.trim_outliers()
 
-query_spotify_for_attributes()
+song_data = query_spotify_for_attributes()
+k_means_labels, k_means_centroids =
+combined_cluster_song_data = combine_cluster_song_data(song_data, k_means_labels)
