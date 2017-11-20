@@ -49,7 +49,7 @@ class Playlist:
         song_uris = ','.join(song_uris)
 
         data = {'song_uri': song_uris}
-        attributes = requests.get('https://playlist-recommender.herokuapp.com/song_attributes', data);
+        attributes = requests.get('https://playlist-recommender.herokuapp.com/song_attributes', data)
         attributes = attributes.json()
 
         self.playlist_accousticness = attributes[0]
