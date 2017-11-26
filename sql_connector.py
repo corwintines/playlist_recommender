@@ -68,19 +68,23 @@ def main():
 		ssh_password='FordF150$', 
 		ssh_username='lucasjakober', 
 		remote_bind_address=('127.0.0.1', 3306)) as server:
-
-		login(config)
-		cnx = openConnection(config)
-		cursor = openCursor(cnx)
+		
+		# conn = MySQLdb.connect(host='127.0.0.1', port=server.local_bind_port, user='yashpatel', passwd='yashpatel')
+		conn = mysql.connector.connect(host='127.0.0.1', port=server.local_bind_port, database='Song_DB', user='yashpatel', passwd='yashpatel')
+		cursor = conn.cursor()
+		
+		# login(config)
+		# cnx = openConnection(config)
+		# cursor = openCursor(cnx)
 
 		song1 = (1,'Doctor Jones','Aqua',4.782,1000.004444,-999.99,188)
 		# song1_Clean = "VALUES {0}, {1}, {2}, {3:.4f}, {4:.4f}, {5:.4f}, {6:.4f}".format(song1[0],song1[1],song1[2],song1[3],song1[4],song1[5],song1[6])
 		song2 = (2,'My Heart Will Go On','Celine Dion',4.782,1000.004444,-999.99,188)
 		# song2_Clean = "{0}, {1}, {2}, {4}8.4f, {8.4f}, {8.4f}, {8.4f}".format(song2,)
 		addSongToDB(cursor, song1)
-		cnx.commit()
+		conn.commit()
 		addSongToDB(cursor, song2)
-		cnx.commit()
+		conn.commit()
 		print song1
 		print song2
 		# print song1_Clean
@@ -88,7 +92,7 @@ def main():
 
 		# print "INSERT INTO Songs (ClusterID, Title, Artist, Danceability, Energy, Loudness, Tempo) VALUES (%d, %s, %s, %.4f, %.4f, %.4f, %.4f)" %song1
 		closeCursor(cursor)
-		closeConnection(cnx)
+		closeConnection(conn)
 
 main()
 
