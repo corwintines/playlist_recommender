@@ -66,10 +66,10 @@ def addSongToDB(cursor, songAttrTup):
 		print "Not a valid song tuple passed!"
 
 def main():
-	with SSHTunnelForwarder(('10.76.136.154', 22), 
+	with SSHTunnelForwarder((base64.b64decode(cred.getAddr()), int(base64.b64decode(cred.getAddr_port()))), 
 		ssh_password=base64.b64decode(cred.getPassword()), 
 		ssh_username=base64.b64decode(cred.getUsername()), 
-		remote_bind_address=('127.0.0.1', 3306)) as server:
+		remote_bind_address=(base64.b64decode(cred.getRemoteAddr()), int(base64.b64decode(cred.getRemoteAddr_port())))) as server:
 		
 		# conn = MySQLdb.connect(host='127.0.0.1', port=server.local_bind_port, user='yashpatel', passwd='yashpatel')
 		conn = mysql.connector.connect(host='127.0.0.1', port=server.local_bind_port, database='Song_DB', user='yashpatel', passwd='yashpatel')
