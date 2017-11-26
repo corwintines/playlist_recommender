@@ -1,7 +1,9 @@
 import mysql.connector
 from mysql.connector import errorcode
 import time
+import base64
 from sshtunnel import SSHTunnelForwarder
+import cred
 
 config = {
 	'user': '',
@@ -65,8 +67,8 @@ def addSongToDB(cursor, songAttrTup):
 
 def main():
 	with SSHTunnelForwarder(('10.76.136.154', 22), 
-		ssh_password='FordF150$', 
-		ssh_username='lucasjakober', 
+		ssh_password=base64.b64decode(cred.getPassword()), 
+		ssh_username=base64.b64decode(cred.getUsername()), 
 		remote_bind_address=('127.0.0.1', 3306)) as server:
 		
 		# conn = MySQLdb.connect(host='127.0.0.1', port=server.local_bind_port, user='yashpatel', passwd='yashpatel')
@@ -76,15 +78,17 @@ def main():
 		# login(config)
 		# cnx = openConnection(config)
 		# cursor = openCursor(cnx)
-
-		song1 = (1,'Doctor Jones','Aqua',4.782,1000.004444,-999.99,188)
-		# song1_Clean = "VALUES {0}, {1}, {2}, {3:.4f}, {4:.4f}, {5:.4f}, {6:.4f}".format(song1[0],song1[1],song1[2],song1[3],song1[4],song1[5],song1[6])
-		song2 = (2,'My Heart Will Go On','Celine Dion',4.782,1000.004444,-999.99,188)
-		# song2_Clean = "{0}, {1}, {2}, {4}8.4f, {8.4f}, {8.4f}, {8.4f}".format(song2,)
-		addSongToDB(cursor, song1)
-		conn.commit()
-		addSongToDB(cursor, song2)
-		conn.commit()
+		counter = 0
+		while counter < 100:
+			song1 = (1,'Doctor Jones','Aqua',4.782,1000.004444,-999.99,188)
+			# song1_Clean = "VALUES {0}, {1}, {2}, {3:.4f}, {4:.4f}, {5:.4f}, {6:.4f}".format(song1[0],song1[1],song1[2],song1[3],song1[4],song1[5],song1[6])
+			song2 = (2,'My Heart Will Go On','Celine Dion',4.782,1000.004444,-999.99,188)
+			# song2_Clean = "{0}, {1}, {2}, {4}8.4f, {8.4f}, {8.4f}, {8.4f}".format(song2,)
+			addSongToDB(cursor, song1)
+			conn.commit()
+			addSongToDB(cursor, song2)
+			conn.commit()
+			counter +=1
 		print song1
 		print song2
 		# print song1_Clean
