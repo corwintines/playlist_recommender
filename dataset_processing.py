@@ -1,5 +1,4 @@
 from hdf5_access_Luke import *
-# from k_means_clustering_dataset import *
 import os
 import requests
 
@@ -30,7 +29,11 @@ def query_spotify_for_attributes():
             MSD_song_attributes[data][0],
             MSD_song_attributes[data][1],
             MSD_song_attributes[data][2],
-            MSD_song_attributes[data][3]
+            MSD_song_attributes[data][3],
+            MSD_song_attributes[data][4],
+            MSD_song_attributes[data][5],
+            MSD_song_attributes[data][6],
+            MSD_song_attributes[data][7]
             ])
 
     return MSD_song_final
