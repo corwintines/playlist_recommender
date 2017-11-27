@@ -3,6 +3,7 @@ from operator import itemgetter
 from sklearn.cluster import KMeans
 import scipy
 from scipy.stats.stats import pearsonr
+from Playlist import Playlist
 
 
 
@@ -17,6 +18,12 @@ listOfCentroids = ([1],
 				   [3],
 				   [2],
 				   [1])
+
+song_attributes = []
+p = Playlist('spotify', '37i9dQZF1DX76Wlfdnj7AP')
+p.get_playlist()
+for song in range(0, len(p.playlist_song_names)):
+	song_attributes.append((p.playlist_dancibility[song], p.playlist_energy[song], p.playlist_loudness[song], p.playlist_accousticness[song], p.playlist_instrumentalness[song], p.playlist_speechness[song], p.playlist_tempo[song], p.playlist_valence[song]))
 
 
 songAttributes = [(0,1,2,3,4),
@@ -117,46 +124,78 @@ def pearsonCorrelation(songAttributes):
 					l = l+1
 	return correlationMatrix
 
-def pearsonCorrelationDict(songAttributes):
+def pearsonCorrelationDict(p):
 	numOfElements = (len(songAttributes))
 	sizeOfElement = (len(songAttributes[0]))
-
+	'''
 	Danceability = []
 	Energy = []
 	Loudness = []
-	Tone = []
-	Beats = []
+	Accousticness = []
+	Instrumentalness = []
+	Speechness = []
+	Tempo = []
+	Valence = []
 
-	for i in range(0, (len(songAttributes[0]))):
-		for j in range(0, (len(songAttributes))):
+	for i in range(0, (len(song_attributes[0]))):
+		for j in range(0, (len(song_attributes))):
 			if i == 0:
-				Danceability.append(songAttributes[j].__getitem__(i))
+				Danceability.append(song_attributes[j].__getitem__(i))
 			if i == 1:
-				Energy.append(songAttributes[j].__getitem__(i))
+				Energy.append(song_attributes[j].__getitem__(i))
 			if i == 2:
-				Loudness.append(songAttributes[j].__getitem__(i))
+				Loudness.append(song_attributes[j].__getitem__(i))
 			if i == 3:
-				Tone.append(songAttributes[j].__getitem__(i))
-			if i ==4:
-				Beats.append(songAttributes[j].__getitem__(i))
+				Accousticness.append(song_attributes[j].__getitem__(i))
+			if i == 4:
+				Instrumentalness.append(song_attributes[j].__getitem__(i))
+			if i == 5:
+				Instrumentalness.append(song_attributes[j].__getitem__(i))
+			if i == 6;
+				Instrumentalness.append(song_attributes[j].__getitem__(i))
+			if i == 7:
+				Instrumentalness.append(song_attributes[j].__getitem__(i))
 
-	print "Danceability: ", Danceability
-	print "Energy: ", Energy
-	print "Loudness: ", Loudness
-	print "Tone: ", Tone
-	print "Beats: ", Beats
-
-	dict = {'Danceability' : {'Energy':(scipy.stats.pearsonr(Danceability,Energy)[0]), 'Loudness':(scipy.stats.pearsonr(Danceability,Loudness)[0]), 'Tone':(scipy.stats.pearsonr(Danceability,Tone)[0]), 'Beats':(scipy.stats.pearsonr(Danceability,Beats)[0])},
-			'Energy' : {'Danceability':(scipy.stats.pearsonr(Danceability,Energy)[0]), 'Loudness':(scipy.stats.pearsonr(Energy,Loudness)[0]), 'Tone':(scipy.stats.pearsonr(Energy,Tone)[0]), 'Beats':(scipy.stats.pearsonr(Energy,Beats)[0])},
-			'Loudness' : {'Danceability': (scipy.stats.pearsonr(Loudness,Danceability)[0]), 'Energy':(scipy.stats.pearsonr(Loudness,Energy)[0]), 'Tone':(scipy.stats.pearsonr(Loudness,Tone)[0]), 'Beats':(scipy.stats.pearsonr(Loudness,Beats)[0])},
-			'Tone' : {'Danceability':(scipy.stats.pearsonr(Tone,Danceability)[0]), 'Energy':(scipy.stats.pearsonr(Tone,Energy)[0]), 'Loudness':(scipy.stats.pearsonr(Tone,Loudness)[0]), 'Beats':(scipy.stats.pearsonr(Tone,Beats)[0])},
-			'Beats' : {'Danceability':(scipy.stats.pearsonr(Beats, Danceability)[0]), 'Energy':(scipy.stats.pearsonr(Beats,Energy)[0]), 'Loudness':(scipy.stats.pearsonr(Beats,Loudness)[0]), 'Tone':(scipy.stats.pearsonr(Beats,Tone)[0])}}
-
+	'''
+	dict = {'Dancibility' : {'Energy':(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_energy)[0]), 'Loudness':(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_loudness)[0]), 'Accousticness' :(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_accousticness)[0]), 'Instrumentalness':(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_instrumentalness)[0]), 'Speechness':(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_speechness)[0]), 'Tempo':(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_tempo)[0]), 'Valence':(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_valence)[0])}, 
+			'Energy' : {'Danceability':(scipy.stats.pearsonr(p.playlist_energy,p.playlist_dancibility)[0]), 'Loudness':(scipy.stats.pearsonr(p.playlist_energy,p.playlist_loudness)[0]), 'Accousticness' :(scipy.stats.pearsonr(p.playlist_energy,p.playlist_accousticness)[0]), 'Instrumentalness':(scipy.stats.pearsonr(p.playlist_energy,p.playlist_instrumentalness)[0]), 'Speechness':(scipy.stats.pearsonr(p.playlist_energy,p.playlist_speechness)[0]), 'Tempo':(scipy.stats.pearsonr(p.playlist_energy,p.playlist_tempo)[0]), 'Valence':(scipy.stats.pearsonr(p.playlist_energy,p.playlist_valence)[0])},
+			'Loudness' : {'Danceability':(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_dancibility)[0]), 'Energy':(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_energy)[0]), 'Accousticness' :(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_accousticness)[0]), 'Instrumentalness':(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_instrumentalness)[0]), 'Speechness':(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_speechness)[0]), 'Tempo':(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_tempo)[0]), 'Valence':(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_valence)[0])},
+			'Accousticness' : {'Danceability':(scipy.stats.pearsonr(p.playlist_accousticness,p.playlist_dancibility)[0]), 'Energy':(scipy.stats.pearsonr(p.playlist_accousticness,p.playlist_energy)[0]), 'Loudness' :(scipy.stats.pearsonr(p.playlist_accousticness,p.playlist_loudness)[0]), 'Instrumentalness':(scipy.stats.pearsonr(p.playlist_accousticness,p.playlist_instrumentalness)[0]), 'Speechness':(scipy.stats.pearsonr(p.playlist_accousticness,p.playlist_speechness)[0]), 'Tempo':(scipy.stats.pearsonr(p.playlist_accousticness,p.playlist_tempo)[0]), 'Valence':(scipy.stats.pearsonr(p.playlist_accousticness,p.playlist_valence)[0])},
+			'Instrumentalness' : {'Danceability':(scipy.stats.pearsonr(p.playlist_instrumentalness,p.playlist_dancibility)[0]), 'Energy':(scipy.stats.pearsonr(p.playlist_instrumentalness,p.playlist_energy)[0]), 'Loudness' :(scipy.stats.pearsonr(p.playlist_instrumentalness,p.playlist_loudness)[0]), 'Accousticness':(scipy.stats.pearsonr(p.playlist_instrumentalness,p.playlist_accousticness)[0]), 'Speechness':(scipy.stats.pearsonr(p.playlist_instrumentalness,p.playlist_speechness)[0]), 'Tempo':(scipy.stats.pearsonr(p.playlist_instrumentalness,p.playlist_tempo)[0]), 'Valence':(scipy.stats.pearsonr(p.playlist_instrumentalness,p.playlist_valence)[0])},
+			'Speechness' : {'Danceability':(scipy.stats.pearsonr(p.playlist_speechness,p.playlist_dancibility)[0]), 'Energy':(scipy.stats.pearsonr(p.playlist_speechness,p.playlist_energy)[0]), 'Loudness' :(scipy.stats.pearsonr(p.playlist_speechness,p.playlist_loudness)[0]), 'Accousticness':(scipy.stats.pearsonr(p.playlist_speechness,p.playlist_accousticness)[0]), 'Instrumentalness':(scipy.stats.pearsonr(p.playlist_speechness,p.playlist_instrumentalness)[0]), 'Tempo':(scipy.stats.pearsonr(p.playlist_speechness,p.playlist_tempo)[0]), 'Valence':(scipy.stats.pearsonr(p.playlist_speechness,p.playlist_valence)[0])},
+			'Tempo' : {'Danceability':(scipy.stats.pearsonr(p.playlist_tempo,p.playlist_dancibility)[0]), 'Energy':(scipy.stats.pearsonr(p.playlist_tempo,p.playlist_energy)[0]), 'Loudness' :(scipy.stats.pearsonr(p.playlist_tempo,p.playlist_loudness)[0]), 'Accousticness':(scipy.stats.pearsonr(p.playlist_tempo,p.playlist_accousticness)[0]), 'Instrumentalness':(scipy.stats.pearsonr(p.playlist_tempo,p.playlist_instrumentalness)[0]), 'Speechness':(scipy.stats.pearsonr(p.playlist_tempo,p.playlist_speechness)[0]), 'Valence':(scipy.stats.pearsonr(p.playlist_tempo,p.playlist_valence)[0])},
+			'Valence' : {'Danceability':(scipy.stats.pearsonr(p.playlist_valence,p.playlist_dancibility)[0]), 'Energy':(scipy.stats.pearsonr(p.playlist_valence,p.playlist_energy)[0]), 'Loudness' :(scipy.stats.pearsonr(p.playlist_valence,p.playlist_loudness)[0]), 'Accousticness':(scipy.stats.pearsonr(p.playlist_valence,p.playlist_accousticness)[0]), 'Instrumentalness':(scipy.stats.pearsonr(p.playlist_valence,p.playlist_instrumentalness)[0]), 'Speechness':(scipy.stats.pearsonr(p.playlist_valence,p.playlist_speechness)[0]), 'Tempo':(scipy.stats.pearsonr(p.playlist_valence,p.playlist_tempo)[0])}}
+	
 	return dict
+ 
 
-	#print str(i), locals()["group" + str(i)]
-	#return scipy.stats.pearsonr(listOfSongs, aggregateVector)
+def outputCorrelation(p):
+	playlistname = p.playlist_playlistname + ".txt"
+	openfile = open(str(playlistname), "w+")
+	openfile.write("Dancibility :")
+	openfile.write(str(pearsonCorrelationDict(p)['Dancibility']))
+	openfile.write("\n\n")
+	openfile.write("Energy :")
+	openfile.write(str(pearsonCorrelationDict(p)['Energy']))
+	openfile.write("\n\n")
+	openfile.write("Loudness :")
+	openfile.write(str(pearsonCorrelationDict(p)['Loudness']))
+	openfile.write("\n\n")
+	openfile.write("Accousticness :")
+	openfile.write(str(pearsonCorrelationDict(p)['Accousticness']))
+	openfile.write("\n\n")
+	openfile.write("Instrumentalness :")
+	openfile.write(str(pearsonCorrelationDict(p)['Instrumentalness']))
+	openfile.write("\n\n")
+	openfile.write("Speechness :")
+	openfile.write(str(pearsonCorrelationDict(p)['Speechness']))
+	openfile.write("\n\n")
+	openfile.write("Tempo :")
+	openfile.write(str(pearsonCorrelationDict(p)['Tempo']))
+	openfile.write("\n\n")
+	openfile.write("Valence :")
+	openfile.write(str(pearsonCorrelationDict(p)['Valence']))
+	openfile.write("\n\n")
+	openfile.close()
 
-
-cluster_data(listOfCentroids)
-print pearsonCorrelationDict(songAttributes)
+outputCorrelation(p)
