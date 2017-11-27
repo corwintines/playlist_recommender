@@ -214,41 +214,57 @@ def pearsonCorrelation2(songAttributes):
 	tempo = []
 	valence = []
 
-	for i in range(0, (len(song_attributes[0]))):
-		for j in range(0, (len(song_attributes))):
+	for i in range(0, (len(songAttributes[0]))):
+		for j in range(0, (len(songAttributes))):
 			if i == 0:
-				artist_familiarity.append(song_attributes[j].__getitem__(i))
+				artist_familiarity.append(songAttributes[j].__getitem__(i))
 			if i == 1:
-				artist_hotness.append(song_attributes[j].__getitem__(i))
+				artist_hotness.append(songAttributes[j].__getitem__(i))
 			if i == 2:
-				duration.append(song_attributes[j].__getitem__(i))
+				duration.append(songAttributes[j].__getitem__(i))
 			if i == 3:
-				endoffadein.append(song_attributes[j].__getitem__(i))
+				endoffadein.append(songAttributes[j].__getitem__(i))
 			if i == 4:
-				startoffadeout.append(song_attributes[j].__getitem__(i))
+				startoffadeout.append(songAttributes[j].__getitem__(i))
 			if i == 5:
-				accousticness.append(song_attributes[j].__getitem__(i))
+				accousticness.append(songAttributes[j].__getitem__(i))
 			if i == 6:
-				dancibility.append(song_attributes[j].__getitem__(i))
+				dancibility.append(songAttributes[j].__getitem__(i))
 			if i == 7:
-				energy.append(song_attributes[j].__getitem__(i))
+				energy.append(songAttributes[j].__getitem__(i))
 			if i == 8:
-				loudness.append(song_attributes[j].__getitem__(i))
+				loudness.append(songAttributes[j].__getitem__(i))
 			if i == 9:
-				instrumentalness.append(song_attributes[j].__getitem__(i))
+				instrumentalness.append(songAttributes[j].__getitem__(i))
 			if i == 10:
-				speechness.append(song_attributes[j].__getitem__(i))
+				speechness.append(songAttributes[j].__getitem__(i))
 			if i == 11:
-				tempo.append(song_attributes[j].__getitem__(i))
+				tempo.append(songAttributes[j].__getitem__(i))
 			if i == 12:
-				valence.append(song_attributes[j].__getitem__(i))
+				valence.append(songAttributes[j].__getitem__(i))
+	'''
+	print "artist_familiarity : ", artist_familiarity
+	print "artist_hotness : ", artist_hotness
+	print "duration : ", duration
+	print "endoffadein : ", endoffadein
+	print "startoffadeout : ", startoffadeout
+	print "accousticness : ", accousticness
+	print "dancibility : ", dancibility
+	print "energy : ", energy
+	print "loudness : ", loudness
+	print "instrumentalness : ", instrumentalness
+	print "speechness : ", speechness
+	print "tempo : ", tempo
+	print "valence : ", valence
+
+	'''
 
 	dict = {'artist_familiarity' : {'artist_familiarity':(scipy.stats.pearsonr(artist_familiarity,artist_familiarity)[0]),
 									'artist_hotness':(scipy.stats.pearsonr(artist_familiarity,artist_hotness)[0]),
 									'duration':(scipy.stats.pearsonr(artist_familiarity,duration)[0]),
 									'endoffadein':(scipy.stats.pearsonr(artist_familiarity,endoffadein)[0]),
 									'startoffadeout':(scipy.stats.pearsonr(artist_familiarity,startoffadeout)[0]),
-									'accousticness' :(scipy.stats.pearsonr(artist_familiarity,accousticness)[0]),
+									'accousticness':(scipy.stats.pearsonr(artist_familiarity,accousticness)[0]),
 									'dancibility':(scipy.stats.pearsonr(artist_familiarity,dancibility)[0]),
 									'energy':(scipy.stats.pearsonr(artist_familiarity,energy)[0]),
 									'loudness':(scipy.stats.pearsonr(artist_familiarity,loudness)[0]),
@@ -261,7 +277,7 @@ def pearsonCorrelation2(songAttributes):
 									'duration':(scipy.stats.pearsonr(artist_hotness,duration)[0]),
 									'endoffadein':(scipy.stats.pearsonr(artist_hotness,endoffadein)[0]),
 									'startoffadeout':(scipy.stats.pearsonr(artist_hotness,startoffadeout)[0]),
-									'accousticness' :(scipy.stats.pearsonr(artist_hotness,accousticness)[0]),
+									'accousticness':(scipy.stats.pearsonr(artist_hotness,accousticness)[0]),
 									'dancibility':(scipy.stats.pearsonr(artist_hotness,dancibility)[0]),
 									'energy':(scipy.stats.pearsonr(artist_hotness,energy)[0]),
 									'loudness':(scipy.stats.pearsonr(artist_hotness,loudness)[0]),
@@ -415,7 +431,6 @@ def pearsonCorrelation2(songAttributes):
 	return dict
 
 
-
 def outputCorrelation(p):
 	playlistname = p.playlist_playlistname + ".txt"
 	openfile = open(str(playlistname), "w+")
@@ -486,5 +501,5 @@ agg = agg1 + agg2 + agg3 + agg4 + agg5 + agg6 + agg7 + agg8 + agg9 + agg10
 song_data = query_spotify_for_attributes()
 correlation_data = pearson_correlation_data(song_data)
 
-openfile = open(str(playlistname), "w+")
+openfile = open("correlation2.txt", "w+")
 openfile.write(str(pearsonCorrelation2(correlation_data)))
