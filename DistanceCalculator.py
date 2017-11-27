@@ -195,10 +195,7 @@ def pearsonCorrelationDict(p):
 
 	return dict
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 1246f522ec63494b9109cf6f793f75e9feb2f97f
 def pearsonCorrelation2(songAttributes):
 	numOfElements = (len(songAttributes))
 	sizeOfElement = (len(songAttributes[0]))
