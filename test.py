@@ -2,7 +2,7 @@ from Playlist import Playlist
 from TrainingPlaylist import TrainingPlaylist
 from dataset_processing import *
 from k_means_clustering_dataset import *
-from DistanceCalculator import *
+import pickle
 
 # p = Playlist('spotify','37i9dQZF1DWZeKCadgRdKQ')
 # p = Playlist('spotify','37i9dQZF1DX76Wlfdnj7AP')
@@ -19,9 +19,16 @@ from DistanceCalculator import *
 # t.trim_outliers()
 
 song_data = query_spotify_for_attributes()
-correlation_data = pearson_correlation_data(song_data)
-matrix = pearsonCorrelation(correlation_data)
-print matrix
-# k_means_labels, k_means_centroids = cluster_data(song_data)
-# # (clusterid, title, artist, artist_familiarity, artist_hotness, duration, endOfFadeIn, startOfFadeOut, acousticness, dancability, energy, intrumentalness, loudness, speechiness, tempo, valence)
-# combined_cluster_song_data = combine_cluster_song_data(song_data, k_means_labels)
+k_means_labels, k_means_centroids = cluster_data(song_data)
+# (clusterid, title, artist, artist_familiarity, artist_hotness, duration, endOfFadeIn, startOfFadeOut, acousticness, dancability, energy, intrumentalness, loudness, speechiness, tempo, valence)
+combined_cluster_song_data = combine_cluster_song_data(song_data, k_means_labels)
+data_output = open('data.txt', 'wb')
+centroid_output = open('centroid.txt', 'wb')
+pickle.dump(combined_cluster_song_data, data_output)
+pickle.dump(k_means_centroids, centroid_output)
+data_output.close
+centroid_output.close
+
+with open('data.txt', 'rb') as f:
+    data = pickle.load(f)
+    print data

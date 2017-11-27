@@ -501,10 +501,7 @@ agg = agg1 + agg2 + agg3 + agg4 + agg5 + agg6 + agg7 + agg8 + agg9 + agg10
 song_data = query_spotify_for_attributes()
 correlation_data = pearson_correlation_data(song_data)
 
-<<<<<<< HEAD
 openfile = open("correlation2.txt", "w+")
 openfile.write(str(pearsonCorrelation2(correlation_data)))
-=======
 openfile = open(str(playlistname), "w+")
 openfile.write(str(pearsonCorrelation2(correlation_data)))
->>>>>>> 1246f522ec63494b9109cf6f793f75e9feb2f97f
