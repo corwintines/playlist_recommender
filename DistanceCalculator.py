@@ -147,15 +147,12 @@ def pearsonCorrelationDict(songAttributes):
 	print "Beats: ", Beats
 
 	dict = {'Danceability' : {'Energy':(scipy.stats.pearsonr(Danceability,Energy)[0]), 'Loudness':(scipy.stats.pearsonr(Danceability,Loudness)[0]), 'Tone':(scipy.stats.pearsonr(Danceability,Tone)[0]), 'Beats':(scipy.stats.pearsonr(Danceability,Beats)[0])},
-			'Energy' : {'Danceability':(scipy.stats.pearsonr(Danceability,Energy)[0]), 'Loudness':(scipy.stats.pearsonr(Energy,Loudness)[0]), 'Tone':(scipy.stats.pearsonr(Energy,Tone)[0]), 'Beats':(scipy.stats.pearsonr(Energy,Beats[0]))},
+			'Energy' : {'Danceability':(scipy.stats.pearsonr(Danceability,Energy)[0]), 'Loudness':(scipy.stats.pearsonr(Energy,Loudness)[0]), 'Tone':(scipy.stats.pearsonr(Energy,Tone)[0]), 'Beats':(scipy.stats.pearsonr(Energy,Beats)[0])},
 			'Loudness' : {'Danceability': (scipy.stats.pearsonr(Loudness,Danceability)[0]), 'Energy':(scipy.stats.pearsonr(Loudness,Energy)[0]), 'Tone':(scipy.stats.pearsonr(Loudness,Tone)[0]), 'Beats':(scipy.stats.pearsonr(Loudness,Beats)[0])},
 			'Tone' : {'Danceability':(scipy.stats.pearsonr(Tone,Danceability)[0]), 'Energy':(scipy.stats.pearsonr(Tone,Energy)[0]), 'Loudness':(scipy.stats.pearsonr(Tone,Loudness)[0]), 'Beats':(scipy.stats.pearsonr(Tone,Beats)[0])},
-			'Beats' : {'Danceability':(scipy.stats.pearsonr(Beats, Danceability)[0]), 'Energy':(scipy.stats.pearsonr(Beats,Energy[0]), 'Loudness':(scipy.stats.pearsonr(Beats,Loudness)[0]), 'Tone':(scipy.stats.pearsonr(Beats,Tone)[0])
-	print 'Danceability :', dict['Danceability']
-	print 'Energy :', dict['Energy']
-	print 'Loudness :', dict['Loudness']
-	print 'Tone :', dict['Tone']
-	print 'Beats :', dict['Beats']
+			'Beats' : {'Danceability':(scipy.stats.pearsonr(Beats, Danceability)[0]), 'Energy':(scipy.stats.pearsonr(Beats,Energy)[0]), 'Loudness':(scipy.stats.pearsonr(Beats,Loudness)[0]), 'Tone':(scipy.stats.pearsonr(Beats,Tone)[0])}}
+
+	return dict
 
 	#print str(i), locals()["group" + str(i)]
 	#return scipy.stats.pearsonr(listOfSongs, aggregateVector)
