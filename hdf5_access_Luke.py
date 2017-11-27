@@ -7,6 +7,7 @@ import os
 import h5py as h5
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 # Functions for ALL HDF5 objects (File, Group and Dataset)
 def isFile(item):
@@ -43,26 +44,9 @@ def getAttributeValues(item):
 def getNumAttributes(item):
 	return len(item.attrs)
 
-def getSongTitleAndArtist(h5file):
-	f = h5file
-	song_tup = ()
-	f_items = f.items()
-	for item in f_items:
-		if isGroup(item[1]):
-			group_items = item[1].items()
-			for group_item in group_items:
-				if isDataset(group_item[1]):
-					dataset_key = group_item[0]
-					dataset_value = group_item[1]
-					if dataset_key == 'songs' and item[0] == 'metadata':
-						valueTup = getValue(dataset_value)[0]
-						title = valueTup[18]
-						artist = valueTup[9]
-						song_tup = (title,artist)
-	return song_tup
 
 # Pass the path to your 'data' folder inside the MillionSongSubset on your computer
-def getMSDSongTitleAndArtistList(MSD_data_folder_path):
+def getSongs_MSD(MSD_data_folder_path):
 	rootdir	= MSD_data_folder_path
 	songList = []
 	for subdir, dirs, files in os.walk(rootdir):
@@ -70,11 +54,100 @@ def getMSDSongTitleAndArtistList(MSD_data_folder_path):
 			filepath = subdir + os.sep + file
 			if filepath.endswith(".h5"):
 				f = h5.File(filepath,"r")
-				song = getSongTitleAndArtist(f)
-				if not song == ():
-					songList.append(song)
-					# print song
+				songDict = getSongAttributes_MSD(f)
+				song = convertSongDictToTup(songDict)
+				songList.append(song)
+				# print song
 	return songList
+
+def getSongAttributes_MSD(h5file):
+	f = h5file
+	song_tup = ()
+	f_items = f.items()
+	songAttribtes = {
+		'artist' : None,
+		'artist_familiarity' : None,
+		'artist_hotness' : None,
+		'duration' : None,
+		'endOfFadeIn' : None,
+		'startOfFadeOut' : None,
+		'title' : None }
+	for item in f_items:
+		if isGroup(item[1]):
+			group_items = item[1].items()
+			for group_item in group_items:
+				if isDataset(group_item[1]):
+					dataset_key = group_item[0]
+					dataset_value = group_item[1]
+					if item[0] == 'metadata' and dataset_key == 'songs':
+						valueTup = getValue(dataset_value)[0]
+						songAttribtes['artist'] = valueTup[9]
+						songAttribtes['artist_familiarity'] = valueTup[2]
+						songAttribtes['artist_hotness'] = valueTup[3]
+						songAttribtes['title'] = valueTup[18]
+					if item[0] == 'analysis' and dataset_key == 'songs':
+						valueTup = getValue(dataset_value)[0]
+						songAttribtes['duration'] = valueTup[3]
+<<<<<<< HEAD
+						songAttribtes['endOfFadeIn'] = valueTup[4]	
+						songAttribtes['startOfFadeOut'] = valueTup[26]						
+	# print songAttribtes
+=======
+						songAttribtes['endOfFadeIn'] = valueTup[4]
+						songAttribtes['startOfFadeOut'] = valueTup[26]
+
+>>>>>>> 014bc72cbb27977e25f61a1cec8f3b54904d7337
+	return songAttribtes
+
+def convertSongDictToTup(songDict):
+	songTup = (songDict['title'], songDict['artist'], songDict['artist_familiarity'], songDict['artist_hotness'], songDict['duration'], songDict['endOfFadeIn'], songDict['startOfFadeOut'])
+	return songTup
+
+
+
+
+### Garbage below only for testing purposes ###
+def test_level1():
+	eff = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/MillionSongSubset/data/A/G/A/TRAGAAF128F9338911.h5'
+	f = h5.File(eff,"r")
+	f_items = f.items()
+	for item in f_items:
+		print ("item: ", item)
+
+def test_level2():
+	eff = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/MillionSongSubset/data/A/G/A/TRAGAAF128F9338911.h5'
+	f = h5.File(eff,"r")
+	f_items = f.items()
+	for item in f_items:
+		if isGroup(item[1]):
+			group_items = item[1].items()
+			for group_item in group_items:
+				print ("group_item: ", group_item)
+
+def test_level3():
+	eff = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/MillionSongSubset/data/A/G/A/TRAGAAF128F9338911.h5'
+	f = h5.File(eff,"r")
+	f_items = f.items()
+	for item in f_items:
+		if isGroup(item[1]):
+			group_items = item[1].items()
+			for group_item in group_items:
+				if isDataset(group_item[1]):
+					dataset_key = group_item[0]
+					print ("item: ", item)
+					print ("group_item: ", group_item)
+					print ("dataset_key: ", dataset_key)
+					dataset_value = group_item[1]
+					print ("dataset_value: ", dataset_value,"\n\n")
+					# valueTup = getValue(dataset_value)[0]
+					valueTup = getValue(dataset_value)
+					print ("valueTup:\n",valueTup)
+					print ("\n\n\n\n")
+
+# level1()
+# level2()
+# level3()
+songs = getSongs_MSD('/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/MillionSongSubset/data')
 
 '''
 ****** Analysis tuple structure ******
@@ -83,10 +156,10 @@ def getMSDSongTitleAndArtistList(MSD_data_folder_path):
 
 		1 		('analysis_sample_rate', '<i4'),
 		2 		('audio_md5', 'S32'),
-		3 		('danceability', '<f8'),
+		3 		('danceability', '<f8'),							*Spotify
 		4 		('duration', '<f8'),
 		5 		('end_of_fade_in', '<f8'),
-		6 		('energy', '<f8'),
+		6 		('energy', '<f8'),									*Spotify
 		7 		('idx_bars_confidence', '<i4'),
 		8 		('idx_bars_start', '<i4'),
 		9 		('idx_beats_confidence', '<i4'),
@@ -104,11 +177,11 @@ def getMSDSongTitleAndArtistList(MSD_data_folder_path):
 		21		('idx_tatums_start', '<i4'),
 		22		('key', '<i4'),
 		23		('key_confidence', '<f8'),
-		24		('loudness', '<f8'),
+		24		('loudness', '<f8'),								*Spotify
 		25		('mode', '<i4'),
 		26		('mode_confidence', '<f8'),
 		27		('start_of_fade_out', '<f8'),
-		28		('tempo', '<f8'),
+		28		('tempo', '<f8'),									*Spotify
 		29		('time_signature', '<i4'),
 		30		('time_signature_confidence', '<f8'),
 		31		('track_id', 'S32')
