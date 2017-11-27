@@ -1,8 +1,8 @@
 import base64
 
 ########## Fill in your username and password for Luke's Macbook #############
-username = base64.b64encode('')
-password = base64.b64encode('')
+username = base64.b64encode('corwinsmith')
+password = base64.b64encode('c0Rw!n.s')
 
 
 
