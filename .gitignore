@@ -1,3 +1,6 @@
 MillionSongSubset/
 cred.py
 cred.pyc
+*.pyc
+corwin_cred.txt
+yash_cred.txt
