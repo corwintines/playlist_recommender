@@ -9,8 +9,6 @@ def query_spotify_for_attributes():
     for song in MSD_song_list:
         if song[0] == None or song[1] == None or song[2] == None or song[3] == None or song[4] == None or song[5] == None or song[6] == None:
             MSD_song_list.remove(song)
-
-    print MSD_song_list[0]
     MSD_song_attributes = []
     MSD_song_final = []
 
@@ -69,9 +67,29 @@ def combine_cluster_song_data(song_data, label_data):
         song_data[elem][11],
         song_data[elem][12],
         song_data[elem][13],
-        song_data[elem][14],
-        song_data[elem][14],
+        song_data[elem][14]
         ]
         combined_data.append(data)
 
     return combined_data
+
+def pearson_correlation_data(data):
+    correlation_data = []
+    for item in data:
+        correlation_data.append([
+        item[2],
+        item[3],
+        item[4],
+        item[5],
+        item[6],
+        item[7],
+        item[8],
+        item[9],
+        item[10],
+        item[11],
+        item[12],
+        item[13],
+        item[14]
+        ])
+
+    return correlation_data
