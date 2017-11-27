@@ -49,18 +49,15 @@ def getNumAttributes(item):
 def getSongs_MSD(MSD_data_folder_path):
 	rootdir	= MSD_data_folder_path
 	songList = []
-	counter = 0
 	for subdir, dirs, files in os.walk(rootdir):
 		for file in files:
-			if counter < 500:
-				filepath = subdir + os.sep + file
-				if filepath.endswith(".h5"):
-					f = h5.File(filepath,"r")
-					songDict = getSongAttributes_MSD(f)
-					song = convertSongDictToTup(songDict)
-					songList.append(song)
-					counter +=1
-					# print song
+			filepath = subdir + os.sep + file
+			if filepath.endswith(".h5"):
+				f = h5.File(filepath,"r")
+				songDict = getSongAttributes_MSD(f)
+				song = convertSongDictToTup(songDict)
+				songList.append(song)
+				# print song
 	return songList
 
 def getSongAttributes_MSD(h5file):
@@ -93,7 +90,7 @@ def getSongAttributes_MSD(h5file):
 						songAttribtes['duration'] = valueTup[3]
 						songAttribtes['endOfFadeIn'] = valueTup[4]	
 						songAttribtes['startOfFadeOut'] = valueTup[26]						
-	print songAttribtes
+	# print songAttribtes
 	return songAttribtes
 
 def convertSongDictToTup(songDict):
