@@ -8,7 +8,22 @@ def cluster_data(data):
     kmeans = KMeans(n_clusters=10, random_state=0).fit(attributes)
     labels = kmeans.predict(attributes)
     centroids = kmeans.cluster_centers_
-    return labels, centroids
+    centroids_order = [
+    centroids[5],
+    centroids[0],
+    centroids[1],
+    centroids[6],
+    centroids[2],
+    centroids[3],
+    centroids[7],
+    centroids[8],
+    centroids[9],
+    centroids[10],
+    centroids[4],
+    centroids[11],
+    centroids[12]
+    ]
+    return labels, centroids_order
 
 def extract_attribute_data(data):
     attribute_data = []
