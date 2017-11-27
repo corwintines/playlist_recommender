@@ -88,8 +88,8 @@ def getSongAttributes_MSD(h5file):
 					if item[0] == 'analysis' and dataset_key == 'songs':
 						valueTup = getValue(dataset_value)[0]
 						songAttribtes['duration'] = valueTup[3]
-						songAttribtes['endOfFadeIn'] = valueTup[4]	
-						songAttribtes['startOfFadeOut'] = valueTup[26]						
+						songAttribtes['endOfFadeIn'] = valueTup[4]
+						songAttribtes['startOfFadeOut'] = valueTup[26]
 	return songAttribtes
 
 def convertSongDictToTup(songDict):

@@ -195,7 +195,6 @@ def pearsonCorrelationDict(p):
 
 	return dict
 
-<<<<<<< HEAD
 def pearsonCorrelation2(songAttributes):
 	numOfElements = (len(songAttributes))
 	sizeOfElement = (len(songAttributes[0]))
@@ -415,9 +414,6 @@ def pearsonCorrelation2(songAttributes):
 	return dict
 
 
-=======
->>>>>>> 96f699f341d0ffb5e091a8a225fc61d04197023b
-
 def outputCorrelation(p):
 	playlistname = p.playlist_playlistname + ".txt"
 	openfile = open(str(playlistname), "w+")
@@ -483,7 +479,7 @@ for song in range(0, len(p10.playlist_song_names)):
 	agg10.append((p10.playlist_dancibility[song], p10.playlist_energy[song], p10.playlist_loudness[song], p10.playlist_accousticness[song], p10.playlist_instrumentalness[song], p10.playlist_speechness[song], p10.playlist_tempo[song], p10.playlist_valence[song]))
 
 agg = []
-agg = agg1 + agg2 + agg3 + agg4 + agg5 + agg6 + agg7 + agg8 + agg9 + agg10 
+agg = agg1 + agg2 + agg3 + agg4 + agg5 + agg6 + agg7 + agg8 + agg9 + agg10
 
 song_data = query_spotify_for_attributes()
 correlation_data = pearson_correlation_data(song_data)
