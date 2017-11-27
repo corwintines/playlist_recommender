@@ -20,7 +20,7 @@ import pickle
 
 song_data = query_spotify_for_attributes()
 k_means_labels, k_means_centroids = cluster_data(song_data)
-# (clusterid, title, artist, artist_familiarity, artist_hotness, duration, endOfFadeIn, startOfFadeOut, acousticness, dancability, energy, intrumentalness, loudness, speechiness, tempo, valence)
+# (clusterid, title, artist, acousticness, artist_familiarity, artist_hotness, dancability, duration, endOfFadeIn, energy, intrumentalness, loudness, speechiness, startOfFadeOut, tempo, valence)
 combined_cluster_song_data = combine_cluster_song_data(song_data, k_means_labels)
 data_output = open('data.txt', 'wb')
 centroid_output = open('centroid.txt', 'wb')
