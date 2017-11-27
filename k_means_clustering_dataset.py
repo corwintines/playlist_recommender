@@ -17,7 +17,16 @@ def extract_attribute_data(data):
         data[element][2],
         data[element][3],
         data[element][4],
-        data[element][5]
+        data[element][5],
+        data[element][6],
+        data[element][7],
+        data[element][8],
+        data[element][9],
+        data[element][10],
+        data[element][11],
+        data[element][12],
+        data[element][13],
+        data[element][14]
         ]
         attribute_data.append(data_element)
     return attribute_data

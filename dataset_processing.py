@@ -9,8 +9,6 @@ def query_spotify_for_attributes():
     for song in MSD_song_list:
         if song[0] == None or song[1] == None or song[2] == None or song[3] == None or song[4] == None or song[5] == None or song[6] == None:
             MSD_song_list.remove(song)
-
-    print MSD_song_list[0]
     MSD_song_attributes = []
     MSD_song_final = []
 
