@@ -21,9 +21,10 @@ listOfCentroids = ([1],
 				   [1])
 
 song_attributes = []
+smoothjazz_attributes = []
 p = Playlist('spotify', '37i9dQZF1DX76Wlfdnj7AP')
 p.get_playlist()
-for song in range(0, len(p.playlist_song_names)):
+for song in range(0, (len(p.playlist_song_names)-1)):
 	song_attributes.append((p.playlist_dancibility[song], p.playlist_energy[song], p.playlist_loudness[song], p.playlist_accousticness[song], p.playlist_instrumentalness[song], p.playlist_speechness[song], p.playlist_tempo[song], p.playlist_valence[song]))
 p2 = Playlist('spotify', '37i9dQZF1DXdxcBWuJkbcy')
 p2.get_playlist()
@@ -52,6 +53,24 @@ p9.get_playlist()
 
 p10 = Playlist('spotify', '37i9dQZF1DX21UfQ8M3LWJ')
 p10.get_playlist()
+
+smoothjazz = Playlist('spotify', '37i9dQZF1DX0SM0LYsmbMT')
+smoothjazz.get_playlist()
+
+country = Playlist('spotify', '37i9dQZF1DWSK8os4XIQBk')
+country.get_playlist()
+
+sleep = Playlist('spotify', '37i9dQZF1DWZd79rJ6a7lp')
+sleep.get_playlist()
+
+coffee = Playlist('spotify', '37i9dQZF1DX6ziVCJnEm59')
+coffee.get_playlist()
+
+sleep2 = Playlist('spotify', '37i9dQZF1DX4sWSpwq3LiO')
+sleep2.get_playlist()
+
+lastfitness = Playlist('spotify', '37i9dQZF1DX0HRj9P7NxeE')
+lastfitness.get_playlist()
 
 songAttributes = [(0,1,2,3,4),
 				  (1,2,4,3,5),
@@ -460,7 +479,58 @@ def outputCorrelation(p):
 	openfile.write("\n\n")
 	openfile.close()
 
-ptotal = []
+def variation(attributes1, attributes2):
+	output = []
+	i = 0
+
+	for j in range(0, (len(attributes1[0]))):
+		v0 = abs((attributes1[0].__getitem__(j) - attributes2[0].__getitem__(j)))
+		v0 = v0/abs((attributes1[0].__getitem__(j)))
+		output.append(v0)
+
+	return output
+	
+def difference(attributes, attributes2):
+	output = []
+
+	for j in range(0, (len(attributes[0]))):
+		v = abs((attributes[0].__getitem__(j) - attributes2[0].__getitem__(j)))
+		output.append(v)
+
+	return output
+def findAverage(playlist):
+	
+	dancibility = []
+	energy = []
+	loudness = []
+	accousticness = []
+	instrumentalness = []
+	speechness = []
+	tempo = []
+	valence = []
+
+	for i in range(0, (len(playlist[0]))):
+		for j in range(0, (len(playlist))):
+			if i == 0:
+				dancibility.append(playlist[j].__getitem__(i))
+			if i == 1:
+				energy.append(playlist[j].__getitem__(i))
+			if i == 2:
+				loudness.append(playlist[j].__getitem__(i))
+			if i == 3:
+				accousticness.append(playlist[j].__getitem__(i))
+			if i == 4:
+				instrumentalness.append(playlist[j].__getitem__(i))
+			if i == 5:
+				speechness.append(playlist[j].__getitem__(i))
+			if i == 6:
+				tempo.append(playlist[j].__getitem__(i))
+			if i == 7:
+				valence.append(playlist[j].__getitem__(i))
+	output = []
+	output.append((np.mean(dancibility), np.mean(energy), np.mean(loudness), np.mean(accousticness), np.mean(instrumentalness), np.mean(speechness), np.mean(tempo), np.mean(valence)))
+	return output
+
 agg1 = []
 agg2 = []
 agg3 = []
@@ -471,37 +541,88 @@ agg7 = []
 agg8 = []
 agg9 = []
 agg10 = []
+country_attributes = []
+sleep_attributes = []
+coffee_attributes = []
+sleep2_attributes = []
+lastfitness_attributes = []
 
-
-
-for song in range(0, len(p.playlist_song_names)):
+for song in range(0, (len(p.playlist_song_names)-1)):
 	agg1.append((p.playlist_dancibility[song], p.playlist_energy[song], p.playlist_loudness[song], p.playlist_accousticness[song], p.playlist_instrumentalness[song], p.playlist_speechness[song], p.playlist_tempo[song], p.playlist_valence[song]))
-for song in range(0, len(p2.playlist_song_names)):
+for song in range(0, (len(p2.playlist_song_names)-1)):
 	agg2.append((p2.playlist_dancibility[song], p2.playlist_energy[song], p2.playlist_loudness[song], p2.playlist_accousticness[song], p2.playlist_instrumentalness[song], p2.playlist_speechness[song], p2.playlist_tempo[song], p2.playlist_valence[song]))
-for song in range(0, len(p3.playlist_song_names)):
+for song in range(0, (len(p3.playlist_song_names)-1)):
 	agg3.append((p3.playlist_dancibility[song], p3.playlist_energy[song], p3.playlist_loudness[song], p3.playlist_accousticness[song], p3.playlist_instrumentalness[song], p3.playlist_speechness[song], p3.playlist_tempo[song], p3.playlist_valence[song]))
-for song in range(0, len(p4.playlist_song_names)):
+for song in range(0, (len(p4.playlist_song_names)-1)):
 	agg4.append((p4.playlist_dancibility[song], p4.playlist_energy[song], p4.playlist_loudness[song], p4.playlist_accousticness[song], p4.playlist_instrumentalness[song], p4.playlist_speechness[song], p4.playlist_tempo[song], p4.playlist_valence[song]))
-#for song in range(0, len(p5.playlist_song_names)):
+#for song in range(0, (len(p5.playlist_song_names)-1)):
 #	agg5.append((p5.playlist_dancibility[song], p5.playlist_energy[song], p5.playlist_loudness[song], p5.playlist_accousticness[song], p5.playlist_instrumentalness[song], p5.playlist_speechness[song], p5.playlist_tempo[song], p5.playlist_valence[song]))
-for song in range(0, len(p6.playlist_song_names)):
+for song in range(0, (len(p6.playlist_song_names)-1)):
 	agg6.append((p6.playlist_dancibility[song], p6.playlist_energy[song], p6.playlist_loudness[song], p6.playlist_accousticness[song], p6.playlist_instrumentalness[song], p6.playlist_speechness[song], p6.playlist_tempo[song], p6.playlist_valence[song]))
-for song in range(0, len(p7.playlist_song_names)):
+for song in range(0, (len(p7.playlist_song_names)-1)):
 	agg7.append((p7.playlist_dancibility[song], p7.playlist_energy[song], p7.playlist_loudness[song], p7.playlist_accousticness[song], p7.playlist_instrumentalness[song], p7.playlist_speechness[song], p7.playlist_tempo[song], p7.playlist_valence[song]))
-for song in range(0, len(p8.playlist_song_names)):
+for song in range(0, (len(p8.playlist_song_names)-1)):
 	agg8.append((p8.playlist_dancibility[song], p8.playlist_energy[song], p8.playlist_loudness[song], p8.playlist_accousticness[song], p8.playlist_instrumentalness[song], p8.playlist_speechness[song], p8.playlist_tempo[song], p8.playlist_valence[song]))
-#for song in range(0, len(p9.playlist_song_names)):
+#for song in range(0, (len(p9.playlist_song_names)-1)):
 #	agg9.append((p9.playlist_dancibility[song], p9.playlist_energy[song], p9.playlist_loudness[song], p9.playlist_accousticness[song], p9.playlist_instrumentalness[song], p9.playlist_speechness[song], p9.playlist_tempo[song], p9.playlist_valence[song]))
-for song in range(0, len(p10.playlist_song_names)):
+for song in range(0, (len(p10.playlist_song_names)-1)):
 	agg10.append((p10.playlist_dancibility[song], p10.playlist_energy[song], p10.playlist_loudness[song], p10.playlist_accousticness[song], p10.playlist_instrumentalness[song], p10.playlist_speechness[song], p10.playlist_tempo[song], p10.playlist_valence[song]))
 
+for song in range(0, (len(smoothjazz.playlist_song_names)-1)):
+	smoothjazz_attributes.append((smoothjazz.playlist_dancibility[song], smoothjazz.playlist_energy[song], smoothjazz.playlist_loudness[song], smoothjazz.playlist_accousticness[song], smoothjazz.playlist_instrumentalness[song], smoothjazz.playlist_speechness[song], smoothjazz.playlist_tempo[song], smoothjazz.playlist_valence[song]))
+
+
+for song in range(0, (len(country.playlist_song_names)-1)):
+	country_attributes.append((country.playlist_dancibility[song], country.playlist_energy[song], country.playlist_loudness[song], country.playlist_accousticness[song], country.playlist_instrumentalness[song], country.playlist_speechness[song], country.playlist_tempo[song], country.playlist_valence[song]))
+
+
+for song in range(0, (len(coffee.playlist_song_names)-1)):
+	coffee_attributes.append((coffee.playlist_dancibility[song], coffee.playlist_energy[song], coffee.playlist_loudness[song], coffee.playlist_accousticness[song], coffee.playlist_instrumentalness[song], coffee.playlist_speechness[song], coffee.playlist_tempo[song], coffee.playlist_valence[song]))
+
+for song in range(0, (len(sleep2.playlist_song_names)-1)):
+	sleep2_attributes.append((sleep2.playlist_dancibility[song], sleep2.playlist_energy[song], sleep2.playlist_loudness[song], sleep2.playlist_accousticness[song], sleep2.playlist_instrumentalness[song], sleep2.playlist_speechness[song], sleep2.playlist_tempo[song], sleep2.playlist_valence[song]))
+
+for song in range(0, (len(lastfitness.playlist_song_names)-1)):
+	lastfitness_attributes.append((lastfitness.playlist_dancibility[song], lastfitness.playlist_energy[song], lastfitness.playlist_loudness[song], lastfitness.playlist_accousticness[song], lastfitness.playlist_instrumentalness[song], lastfitness.playlist_speechness[song], lastfitness.playlist_tempo[song], lastfitness.playlist_valence[song]))
+
+
 agg = []
-agg = agg1 + agg2 + agg3 + agg4 + agg5 + agg6 + agg7 + agg8 + agg9 + agg10
+agg = agg1 + agg2 + agg3 + agg4 + agg6 + agg7 + agg8 + agg10
 
-song_data = query_spotify_for_attributes()
-correlation_data = pearson_correlation_data(song_data)
+'''
+print "Fitness Song Average : ", findAverage(agg)
+print "\n"
+print "Smooth Jazz Average : ", findAverage(smoothjazz_attributes)
+print "\n"
+print "Country Song Average : ", findAverage(country_attributes)
+print "\n"
+print "Coffee Song Average : ", findAverage(coffee_attributes)
+print "\n"
+print "Sleep 2 Song Average : ", findAverage(sleep2_attributes)
+print "\n"
+'''
 
-openfile = open("correlation2.txt", "w+")
-openfile.write(str(pearsonCorrelation2(correlation_data)))
-openfile = open(str(playlistname), "w+")
-openfile.write(str(pearsonCorrelation2(correlation_data)))
+averageoffitness = findAverage(agg)
+averageofsmoothjazz = findAverage(smoothjazz_attributes)
+averageofcountry = findAverage(country_attributes)
+averageofcoffee = findAverage(coffee_attributes)
+averageofsleep2 = findAverage(sleep2_attributes)
+averageoflastfitness = findAverage(lastfitness_attributes)
+
+
+print "Variation Fitness and Smooth Jazz: ", variation(averageoflastfitness, averageofsmoothjazz)
+print "\n"
+print "Variation Fitness and Country", variation(averageoflastfitness, averageofcountry)
+print "\n"
+print "Variation Fitness and Coffee", variation(averageoflastfitness, averageofcoffee)
+print "\n"
+print "Variation Fitness and Sleep 2", variation(averageoflastfitness, averageofsleep2)
+
+
+#song_data = query_spotify_for_attributes()
+#correlation_data = pearson_correlation_data(song_data)
+
+#openfile = open("correlation2.txt", "w+")
+#openfile.write(str(pearsonCorrelation2(correlation_data)))
+#openfile = open(str(playlistname), "w+")
+#openfile.write(str(pearsonCorrelation2(correlation_data)))
