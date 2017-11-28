@@ -6,26 +6,10 @@ from scipy.stats.stats import pearsonr
 from Playlist import Playlist
 from dataset_processing import *
 
-
-
-aggregateVector = [0]
-listOfCentroids = ([1],
-				   [2],
-				   [3],
-				   [4],
-				   [5],
-				   [5],
-				   [4],
-				   [3],
-				   [2],
-				   [1])
-
-song_attributes = []
-smoothjazz_attributes = []
+# Getting Playlist objects - p - p10 are all fitness playlists
 p = Playlist('spotify', '37i9dQZF1DX76Wlfdnj7AP')
 p.get_playlist()
-for song in range(0, (len(p.playlist_song_names)-1)):
-	song_attributes.append((p.playlist_dancibility[song], p.playlist_energy[song], p.playlist_loudness[song], p.playlist_accousticness[song], p.playlist_instrumentalness[song], p.playlist_speechness[song], p.playlist_tempo[song], p.playlist_valence[song]))
+
 p2 = Playlist('spotify', '37i9dQZF1DXdxcBWuJkbcy')
 p2.get_playlist()
 
@@ -34,10 +18,6 @@ p3.get_playlist()
 
 p4 = Playlist('spotify', '37i9dQZF1DX35oM5SPECmN')
 p4.get_playlist()
-
-
-#p5 = Playlist('spotify', '37i9dQZF1DWSJHnPb1f0X3')
-#p5.get_playlist()
 
 p6 = Playlist('spotify', '37i9dQZF1DX6hvx9KDaW4s')
 p6.get_playlist()
@@ -48,41 +28,37 @@ p7.get_playlist()
 p8 = Playlist('spotify', '37i9dQZF1DX4eRPd9frC1m')
 p8.get_playlist()
 
-#p9 = Playlist('spotify', '37i9dQZF1DX70RN3TfWWJh')
-#p9.get_playlist()
-
 p10 = Playlist('spotify', '37i9dQZF1DX21UfQ8M3LWJ')
 p10.get_playlist()
 
+# Getting smooth jazz Playist
 smoothjazz = Playlist('spotify', '37i9dQZF1DX0SM0LYsmbMT')
 smoothjazz.get_playlist()
 
+# Getting Country Playist
 country = Playlist('spotify', '37i9dQZF1DWSK8os4XIQBk')
 country.get_playlist()
 
+# Getting Country Playist
 sleep = Playlist('spotify', '37i9dQZF1DWZd79rJ6a7lp')
 sleep.get_playlist()
 
+# Getting Coffee Playist
 coffee = Playlist('spotify', '37i9dQZF1DX6ziVCJnEm59')
 coffee.get_playlist()
 
+# Getting Sleep Playist
 sleep2 = Playlist('spotify', '37i9dQZF1DX4sWSpwq3LiO')
 sleep2.get_playlist()
 
+# Getting another  Playist
 lastfitness = Playlist('spotify', '37i9dQZF1DX0HRj9P7NxeE')
 lastfitness.get_playlist()
 
-songAttributes = [(0,1,2,3,4),
-				  (1,2,4,3,5),
-				  (1,2,5,6,4),
-				  (1,2,4,5,8),
-				  (6,5,1,2,5),
-				  (4,3,2,4,5),
-				  (9,8,6,3,7)]
-
-x = (1,2,3,4,5,6,7,8)
-y = (1,2,3,4,5,6,7,8)
-
+# Takes in a list of one tuple containing average/aggregate song attributes 
+# and a list of tupples containing centroids
+# the ouptut is a list of one list containing the index of the closest centroid
+# from the input file and the eucledian distance
 def closestCentroid(aggregateVector, listOfCentroids):
 	closestIndex = []
 	for x in range(0,len(listOfCentroids)):
@@ -104,7 +80,10 @@ def closestCentroid(aggregateVector, listOfCentroids):
 
 	return closestIndex[0].__getitem__(0)
 
-
+# Takes in a list of one tuple containing average/aggregate song attributes 
+# and a list of tuples containing song attributes and n for n number of closest songs
+# the ouptut is a list of one tuple containing the index of the closest n songs
+# based on eucledean distance
 def closestSongs(aggregateVector, listOfSongs, n):
 	closestIndex = []
 	for x in range(0,len(listOfSongs)):
@@ -129,51 +108,14 @@ def closestSongs(aggregateVector, listOfSongs, n):
 
 	return [x[0] for x in closestIndex]
 
-
-
-
-
-closestCentroid(aggregateVector, listOfCentroids)
-
-closestSongs(aggregateVector, listOfCentroids, 3)
-
-
-def cluster_data(data):
-    attributes = data
-    kmeans = KMeans(n_clusters=2, random_state=0).fit(attributes)
-    labels = kmeans.predict(attributes)
-    centroids = kmeans.cluster_centers_
-    return labels, centroids
-
-def pearsonCorrelation(songAttributes):
-	numOfElements = (len(songAttributes))
-	sizeOfElement = (len(songAttributes[0]))
-	print 'Num of Elements ', numOfElements
-	print 'Values inside the Element ', sizeOfElement
-	correlationMatrix = []
-	temp = []
-	l = 1
-	for i in range(0, sizeOfElement):
-		locals()["group"+str(i)] = []
-		for j in range(0, numOfElements):
-			locals()["group"+str(i)].append(songAttributes[j].__getitem__(i))
-
-		print str(i), locals()["group"+str(i)]
-		if (i == 14):
-			for k in range(0, sizeOfElement):
-				l = k+1
-				while(l < sizeOfElement):
-					tuple1 = tuple(locals()["group"+str(k)])
-					tuple2 = tuple(locals()["group"+str(l)])
-					temp = scipy.stats.pearsonr(tuple1,tuple2)
-					correlationMatrix.append(temp[0])
-					l = l+1
-	return correlationMatrix
-
+# USE ONLY FOR 8 attributes - USE next function below for 13 attributes
+# Takes in a list of tuples containing song attributes
+# and calculates the pearson r correlation for each attribute
+# outputs a dictionary for each attribute containing the correlation
+# for every other attribute 
 def pearsonCorrelationDict(p):
 	numOfElements = (len(songAttributes))
 	sizeOfElement = (len(songAttributes[0]))
-	'''
 	Danceability = []
 	Energy = []
 	Loudness = []
@@ -202,7 +144,6 @@ def pearsonCorrelationDict(p):
 			if i == 7:
 				Instrumentalness.append(song_attributes[j].__getitem__(i))
 
-	'''
 	dict = {'Dancibility' : {'Energy':(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_energy)[0]), 'Loudness':(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_loudness)[0]), 'Accousticness' :(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_accousticness)[0]), 'Instrumentalness':(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_instrumentalness)[0]), 'Speechness':(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_speechness)[0]), 'Tempo':(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_tempo)[0]), 'Valence':(scipy.stats.pearsonr(p.playlist_dancibility,p.playlist_valence)[0])},
 			'Energy' : {'Danceability':(scipy.stats.pearsonr(p.playlist_energy,p.playlist_dancibility)[0]), 'Loudness':(scipy.stats.pearsonr(p.playlist_energy,p.playlist_loudness)[0]), 'Accousticness' :(scipy.stats.pearsonr(p.playlist_energy,p.playlist_accousticness)[0]), 'Instrumentalness':(scipy.stats.pearsonr(p.playlist_energy,p.playlist_instrumentalness)[0]), 'Speechness':(scipy.stats.pearsonr(p.playlist_energy,p.playlist_speechness)[0]), 'Tempo':(scipy.stats.pearsonr(p.playlist_energy,p.playlist_tempo)[0]), 'Valence':(scipy.stats.pearsonr(p.playlist_energy,p.playlist_valence)[0])},
 			'Loudness' : {'Danceability':(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_dancibility)[0]), 'Energy':(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_energy)[0]), 'Accousticness' :(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_accousticness)[0]), 'Instrumentalness':(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_instrumentalness)[0]), 'Speechness':(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_speechness)[0]), 'Tempo':(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_tempo)[0]), 'Valence':(scipy.stats.pearsonr(p.playlist_loudness,p.playlist_valence)[0])},
@@ -214,7 +155,7 @@ def pearsonCorrelationDict(p):
 
 	return dict
 
-
+# same things as the above function but for 13 attributes
 def pearsonCorrelation2(songAttributes):
 	numOfElements = (len(songAttributes))
 	sizeOfElement = (len(songAttributes[0]))
@@ -261,22 +202,6 @@ def pearsonCorrelation2(songAttributes):
 				tempo.append(songAttributes[j].__getitem__(i))
 			if i == 12:
 				valence.append(songAttributes[j].__getitem__(i))
-	'''
-	print "artist_familiarity : ", artist_familiarity
-	print "artist_hotness : ", artist_hotness
-	print "duration : ", duration
-	print "endoffadein : ", endoffadein
-	print "startoffadeout : ", startoffadeout
-	print "accousticness : ", accousticness
-	print "dancibility : ", dancibility
-	print "energy : ", energy
-	print "loudness : ", loudness
-	print "instrumentalness : ", instrumentalness
-	print "speechness : ", speechness
-	print "tempo : ", tempo
-	print "valence : ", valence
-
-	'''
 
 	dict = {'artist_familiarity' : {'artist_familiarity':(scipy.stats.pearsonr(artist_familiarity,artist_familiarity)[0]),
 									'artist_hotness':(scipy.stats.pearsonr(artist_familiarity,artist_hotness)[0]),
@@ -449,7 +374,8 @@ def pearsonCorrelation2(songAttributes):
 									'valence':(scipy.stats.pearsonr(valence,valence)[0])}}
 	return dict
 
-
+# calculates the correlation using the 8 attributes
+# and write the outputs to a local directory
 def outputCorrelation(p):
 	playlistname = p.playlist_playlistname + ".txt"
 	openfile = open(str(playlistname), "w+")
@@ -479,6 +405,7 @@ def outputCorrelation(p):
 	openfile.write("\n\n")
 	openfile.close()
 
+# Extra function that calculates variation between two lists of tuples
 def variation(attributes1, attributes2):
 	output = []
 	i = 0
@@ -489,7 +416,8 @@ def variation(attributes1, attributes2):
 		output.append(v0)
 
 	return output
-	
+
+# Calculates the difference between two lists of one tuple containing the aggregate vector
 def difference(attributes, attributes2):
 	output = []
 
@@ -498,6 +426,8 @@ def difference(attributes, attributes2):
 		output.append(v)
 
 	return output
+
+# Finds the aggregate vector by taking in a list of tuples containing song attributes
 def findAverage(playlist):
 	dancibility = []
 	energy = []
@@ -539,6 +469,7 @@ def findAverage(playlist):
 	output.append((np.mean(dancibility), np.mean(energy), np.mean(loudness), np.mean(accousticness), np.mean(instrumentalness), np.mean(speechness), np.mean(tempo), np.mean(valence)))
 	return output
 
+# Normalizes a list of tuples containing playlist songs attributes
 def normalize(playlist):
 	dancibility = []
 	energy = []
@@ -677,13 +608,7 @@ def normalize(playlist):
 
 	return output
 
-
-
-
-
-
-
-
+# Creating Empty Lists
 agg1 = []
 agg2 = []
 agg3 = []
@@ -694,40 +619,43 @@ agg7 = []
 agg8 = []
 agg9 = []
 agg10 = []
+smoothjazz_attributes = []
 country_attributes = []
 sleep_attributes = []
 coffee_attributes = []
 sleep2_attributes = []
 lastfitness_attributes = []
 
+# Grabbing song attributes for all the songs in the playlist
 for song in range(0, (len(p.playlist_song_names)-1)):
 	agg1.append((p.playlist_dancibility[song], p.playlist_energy[song], p.playlist_loudness[song], p.playlist_accousticness[song], p.playlist_instrumentalness[song], p.playlist_speechness[song], p.playlist_tempo[song], p.playlist_valence[song]))
+
 for song in range(0, (len(p2.playlist_song_names)-1)):
 	agg2.append((p2.playlist_dancibility[song], p2.playlist_energy[song], p2.playlist_loudness[song], p2.playlist_accousticness[song], p2.playlist_instrumentalness[song], p2.playlist_speechness[song], p2.playlist_tempo[song], p2.playlist_valence[song]))
+
 for song in range(0, (len(p3.playlist_song_names)-1)):
 	agg3.append((p3.playlist_dancibility[song], p3.playlist_energy[song], p3.playlist_loudness[song], p3.playlist_accousticness[song], p3.playlist_instrumentalness[song], p3.playlist_speechness[song], p3.playlist_tempo[song], p3.playlist_valence[song]))
+
 for song in range(0, (len(p4.playlist_song_names)-1)):
 	agg4.append((p4.playlist_dancibility[song], p4.playlist_energy[song], p4.playlist_loudness[song], p4.playlist_accousticness[song], p4.playlist_instrumentalness[song], p4.playlist_speechness[song], p4.playlist_tempo[song], p4.playlist_valence[song]))
-#for song in range(0, (len(p5.playlist_song_names)-1)):
-#	agg5.append((p5.playlist_dancibility[song], p5.playlist_energy[song], p5.playlist_loudness[song], p5.playlist_accousticness[song], p5.playlist_instrumentalness[song], p5.playlist_speechness[song], p5.playlist_tempo[song], p5.playlist_valence[song]))
+
 for song in range(0, (len(p6.playlist_song_names)-1)):
 	agg6.append((p6.playlist_dancibility[song], p6.playlist_energy[song], p6.playlist_loudness[song], p6.playlist_accousticness[song], p6.playlist_instrumentalness[song], p6.playlist_speechness[song], p6.playlist_tempo[song], p6.playlist_valence[song]))
+
 for song in range(0, (len(p7.playlist_song_names)-1)):
 	agg7.append((p7.playlist_dancibility[song], p7.playlist_energy[song], p7.playlist_loudness[song], p7.playlist_accousticness[song], p7.playlist_instrumentalness[song], p7.playlist_speechness[song], p7.playlist_tempo[song], p7.playlist_valence[song]))
+
 for song in range(0, (len(p8.playlist_song_names)-1)):
 	agg8.append((p8.playlist_dancibility[song], p8.playlist_energy[song], p8.playlist_loudness[song], p8.playlist_accousticness[song], p8.playlist_instrumentalness[song], p8.playlist_speechness[song], p8.playlist_tempo[song], p8.playlist_valence[song]))
-#for song in range(0, (len(p9.playlist_song_names)-1)):
-#	agg9.append((p9.playlist_dancibility[song], p9.playlist_energy[song], p9.playlist_loudness[song], p9.playlist_accousticness[song], p9.playlist_instrumentalness[song], p9.playlist_speechness[song], p9.playlist_tempo[song], p9.playlist_valence[song]))
+
 for song in range(0, (len(p10.playlist_song_names)-1)):
 	agg10.append((p10.playlist_dancibility[song], p10.playlist_energy[song], p10.playlist_loudness[song], p10.playlist_accousticness[song], p10.playlist_instrumentalness[song], p10.playlist_speechness[song], p10.playlist_tempo[song], p10.playlist_valence[song]))
 
 for song in range(0, (len(smoothjazz.playlist_song_names)-1)):
 	smoothjazz_attributes.append((smoothjazz.playlist_dancibility[song], smoothjazz.playlist_energy[song], smoothjazz.playlist_loudness[song], smoothjazz.playlist_accousticness[song], smoothjazz.playlist_instrumentalness[song], smoothjazz.playlist_speechness[song], smoothjazz.playlist_tempo[song], smoothjazz.playlist_valence[song]))
 
-
 for song in range(0, (len(country.playlist_song_names)-1)):
 	country_attributes.append((country.playlist_dancibility[song], country.playlist_energy[song], country.playlist_loudness[song], country.playlist_accousticness[song], country.playlist_instrumentalness[song], country.playlist_speechness[song], country.playlist_tempo[song], country.playlist_valence[song]))
-
 
 for song in range(0, (len(coffee.playlist_song_names)-1)):
 	coffee_attributes.append((coffee.playlist_dancibility[song], coffee.playlist_energy[song], coffee.playlist_loudness[song], coffee.playlist_accousticness[song], coffee.playlist_instrumentalness[song], coffee.playlist_speechness[song], coffee.playlist_tempo[song], coffee.playlist_valence[song]))
@@ -738,27 +666,12 @@ for song in range(0, (len(sleep2.playlist_song_names)-1)):
 for song in range(0, (len(lastfitness.playlist_song_names)-1)):
 	lastfitness_attributes.append((lastfitness.playlist_dancibility[song], lastfitness.playlist_energy[song], lastfitness.playlist_loudness[song], lastfitness.playlist_accousticness[song], lastfitness.playlist_instrumentalness[song], lastfitness.playlist_speechness[song], lastfitness.playlist_tempo[song], lastfitness.playlist_valence[song]))
 
-
 agg = []
 agg = agg1 + agg2 + agg3 + agg4 + agg6 + agg7 + agg8 + agg10
 
-
-# print "Fitness Song Average 2 : ", findAverage(lastfitness_attributes)
-# print "\n"
-# print "Smooth Jazz Average : ", findAverage(smoothjazz_attributes)
-# print "\n"
-# print "Country Song Average : ", findAverage(country_attributes)
-# print "\n"
-# print "Coffee Song Average : ", findAverage(coffee_attributes)
-# print "\n"
-# print "Sleep 2 Song Average : ", findAverage(sleep2_attributes)
-# print "\n"
-
-# averageoffitness = findAverage(agg)
-# averageofsmoothjazz = findAverage(smoothjazz_attributes)
-# averageofcountry = findAverage(country_attributes)
-# averageofcoffee = findAverage(coffee_attributes)
+# First normalize the data of the fitness songs
 normalized_lastfitness_attributes = normalize(lastfitness_attributes)
+# Next find the average
 averageoflastfitness = findAverage(normalized_lastfitness_attributes)
 
 normalized_sleep2 = normalize(sleep2_attributes)
@@ -776,42 +689,7 @@ averageofsmoothjazz = findAverage(normalized_smoothjazz)
 normalized_agg = normalize(agg)
 averageofagg = findAverage(normalized_agg)
 
+# Prints the difference between the two list of one tuple containing the 
+# aggregate song attributes
 print "Difference : ", difference(averageoflastfitness, averageofcountry)
 
-
-
-
-
-# print "Variation Fitness and Smooth Jazz: ", variation(averageoflastfitness, averageofsmoothjazz)
-# print "\n"
-# print "Variation Fitness and Country", variation(averageoflastfitness, averageofcountry)
-# print "\n"
-# print "Variation Fitness and Coffee", variation(averageoflastfitness, averageofcoffee)
-# print "\n"
-# print "Variation Fitness and Sleep 2", variation(averageoflastfitness, averageofsleep2)
-
-# print lastfitness_attributes
-# print averageoflastfitness
-
-
-
-'''
-
-for song in lastfitness_attributes:
-	for index in range(0,len(song)-1):
-		# print len(averageoflastfitness)
-		# print averageoflastfitness[index]
-		percent_diff = abs((song[index])-(averageoflastfitness[0][index])) / averageoflastfitness[0][index]
-		if percent_diff > 1.0:
-			print 'song: ', song
-			print 'averageoflastfitness: ', averageoflastfitness
-			print 'index: ', index
-			print 'percent_diff: ', percent_diff
-'''
-#song_data = query_spotify_for_attributes()
-#correlation_data = pearson_correlation_data(song_data)
-
-#openfile = open("correlation2.txt", "w+")
-#openfile.write(str(pearsonCorrelation2(correlation_data)))
-#openfile = open(str(playlistname), "w+")
-#openfile.write(str(pearsonCorrelation2(correlation_data)))
