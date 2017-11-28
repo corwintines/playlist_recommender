@@ -14,7 +14,12 @@ def cluster_data(data):
     centroids[1],
     centroids[2],
     centroids[3],
-    centroids[4]
+    centroids[4],
+    centroids[5],
+    centroids[6],
+    centroids[7],
+    centroids[8],
+    centroids[9]
     ]
     return labels, centroids_order
 
