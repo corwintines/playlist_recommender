@@ -5,190 +5,278 @@ import base64
 from sshtunnel import SSHTunnelForwarder
 import cred
 
-config = {
-	'user': '',
-	'password': '',
-	'database': 'Song_DB',
-	'host' : 'localhost',
-	'raise_on_warnings': True,
-}
+'''
+To access the database:
 
-def closeConnection(connection):
-	if isinstance(connection, mysql.connector.MySQLConnection):
-		connection.close()
-		print "Connection successfully closed."
-	else:
-		print "Error: Not a valid 'mysql.connector.MySQLConnection' object to close."
+		-> 'cred.py' file needs to be in .../playlist_recommender/ folder and populated with 
+			your ssh and mysql usernames and passwords
 
-def closeCursor(cursor):
-	cursor.close()
+*** Important ***
+		-> Wrap the Song_DB() object you create in with statement like this:
 
-def executeQuery(cursor, query, errorDescription=''):
-	try:
-		cursor.execute(query)
-	except mysql.connector.Error as e:
-		print errorDescription+": "+str(e)
+				with Song_DB() as dbase:
+					dbase.create_SongTable()
+					dbase.insert_Songs(song_list)
+					... all the database function calls ...
 
+		If you don't wrap in the 'with Song_DB() as' statement it leaves connections half
+		open on my computer and acts buggy af.
 
-def createClusterTable(cursor):
-	query = (
-		"CREATE TABLE Cluster "
-		"("
-		"ClusterID int(11) NOT NULL, "
-		"Danceability decimal(12,8) NOT NULL, "
-		"Energy decimal(12,8) NOT NULL, "
-		"Loudness decimal(12,8) NOT NULL, "
-		"Tempo decimal(12,8) NOT NULL, "
-		"PRIMARY KEY (ClusterID) "
-		") "
-		"ENGINE=InnoDB DEFAULT CHARSET=utf8; "
-		)
-	executeQuery(cursor,query,'Error creating Cluster table in DB')
+		-> You can execute other code/modules in the with statement if you need
+		-> If you need to insert only one song or one cluster, just put it in a list first
+'''
 
-def createSongTable(cursor):
-	query = (
-		"CREATE TABLE Song "
-		"("
-		"song_DB_ID int(11) NOT NULL AUTO_INCREMENT, "
-		"ClusterID int(11) NOT NULL, "
-		"Title varchar(255) NOT NULL, "
-		"Artist_Name varchar(255) NOT NULL, "
-		"Artist_Familiarity decimal(12,8) NOT NULL, "
-		"Artist_Hotness decimal(12,8) NOT NULL, "
-		"Danceability decimal(12,8) NOT NULL, "
-		"Duration decimal(12,8) NOT NULL, "
-		"End_of_Fade_In decimal(12,8) NOT NULL, "
-		"Energy decimal(12,8) NOT NULL, "
-		"Loudness decimal(12,8) NOT NULL, "
-		"Start_of_Fade_Out decimal(12,8) NOT NULL, "
-		"Tempo decimal(12,8) NOT NULL, "
-		"PRIMARY KEY (song_DB_ID), "
-		"KEY Songs_ClusterID_INDEX (ClusterID)"
-		") "
-		"ENGINE=InnoDB AUTO_INCREMENT=86137 DEFAULT CHARSET=utf8; "
-		)
-	executeQuery(cursor,query,'Error creating Song table in DB')
+class Song_DB:
+	def __init__(self):
+		self.server = None
+		self.connection = None
+		self.cursor = None
 
-
-def addSongToDB(cursor, song, songIsTup = False, songIsDict = False):
-	columns = (
-		"INSERT INTO Songs "
-		"(ClusterID, "
-		"Title, "
-		"Artist_Name, "
-		"Artist_Familiarity, "
-		"Artist_Hotness, "
-		"Danceability, "
-		"Duration, "
-		"End_of_Fade_In, "
-		"Energy, "
-		"Loudness, "
-		"Start_of_Fade_Out, "
-		"Tempo) "
-		)
-	if songIsTup and not songIsDict:
-		values = (
-			"VALUES ("
-			"{0}, "
-			"'{1}', "
-			"'{2}', "
-			"{3:.8f}, "
-			"{4:.8f}, "
-			"{5:.8f}, "
-			"{6:.8f}, "
-			"{7:.8f}, "
-			"{8:.8f}, "
-			"{9:.8f}, "
-			"{10:.8f}, "
-			"{11:.8f}, "
-			"{12:.8f} "
-			" ) ;".format(
-			songAttrTup[0],
-			songAttrTup[1],
-			songAttrTup[2],
-			songAttrTup[3],
-			songAttrTup[4],
-			songAttrTup[5],
-			songAttrTup[6],
-			songAttrTup[7],
-			songAttrTup[8],
-			songAttrTup[9],
-			songAttrTup[10],
-			songAttrTup[11])
+	def __enter__(self):
+		self.server = SSHTunnelForwarder(
+			(base64.b64decode(cred.getAddr()), int(base64.b64decode(cred.getAddr_port()))), 
+			ssh_password=base64.b64decode(cred.getPassword_SSH()), 
+			ssh_username=base64.b64decode(cred.getUsername_SSH()), 
+			remote_bind_address=(base64.b64decode(cred.getRemoteAddr()), int(base64.b64decode(cred.getRemoteAddr_port())))
 			)
-	elif songIsDict and not songIsTup:
-		values = (
-			"VALUES ("
-			"{0}, "
-			"'{1}', "
-			"'{2}', "
-			"{3:.8f}, "
-			"{4:.8f}, "
-			"{5:.8f}, "
-			"{6:.8f}, "
-			"{7:.8f}, "
-			"{8:.8f}, "
-			"{9:.8f}, "
-			"{10:.8f}, "
-			"{11:.8f}, "
-			"{12:.8f} "
-			" ) ;".format(
-			songAttrTup['ClusterID'],
-			songAttrTup['Title'],
-			songAttrTup['Artist_Name'],
-			songAttrTup['Artist_Familiarity'],
-			songAttrTup['Artist_Hotness'],
-			songAttrTup['Danceability'],
-			songAttrTup['Duration'],
-			songAttrTup['End_of_Fade_In'],
-			songAttrTup['Energy'],
-			songAttrTup['Loudness'],
-			songAttrTup['Start_of_Fade_Out'],
-			songAttrTup['Tempo'])
-			)
-	if values:
-		query = columns + values
-		executeQuery(cursor,query,'Error adding Song to DB')
-	else:
-		print "Specify parameter to indicate song format."
-
-def main():
-	with SSHTunnelForwarder(
-		(base64.b64decode(cred.getAddr()), int(base64.b64decode(cred.getAddr_port()))), 
-		ssh_password=base64.b64decode(cred.getPassword_SSH()), 
-		ssh_username=base64.b64decode(cred.getUsername_SSH()), 
-		remote_bind_address=(base64.b64decode(cred.getRemoteAddr()), int(base64.b64decode(cred.getRemoteAddr_port())))
-		) as server:
-		
 		try:
-			conn = mysql.connector.connect(
+			self.server.start()
+			print "open SSH: success"
+		except:
+			print "Error: SSH DB server connection unsuccessful."
+		try:
+			self.connection = mysql.connector.connect(
 				host='127.0.0.1', 
-				port=server.local_bind_port, 
+				port=self.server.local_bind_port, 
 				database='Song_DB', 
 				user=base64.b64decode(cred.getUsername_MySQL()), 
 				passwd=base64.b64decode(cred.getPassword_MySQL()))
-			cursor = conn.cursor()
+			self.cursor = self.connection.cursor()
+			print "open connection: success\nopen cursor: success"
+			return self
 		except mysql.connector.Error as e:
-			print "Error making connection:", str(e)
+			print "Error making DB connection:", str(e)
+		
+	def __exit__(self, exc_type, exc_value, traceback):
+		try:
+			if not self.cursor is None:
+				self.cursor.close()
+				print "close cursor: success"
+		except mysql.connector.Error as e:
+			print str(e)
+		try:
+			if not self.connection is None:
+				self.connection.close()
+				print "close connection: success"
+		except mysql.connector.Error as e:
+			print str(e)
+		try:
+			if not self.server is None:
+				self.server.stop()
+				print "close SSH: success"
+		except:
+			print "Error in Song_DB: '__exit__()' -> SSH server connection not successfully closed"
 
-		conn.commit()
+	def insert_Clusters(self, cluster_list=[]):
+		if not cluster_list:
+			print "cluster_list is empty"
+			return
+		columns = (
+			"INSERT INTO Cluster "
+			"(ClusterID, "
+			"Accousticness, "
+			"Artist_Familiarity, "
+			"Artist_Hotness, "
+			"Danceability, "
+			"Duration, "
+			"End_of_Fade_In, "
+			"Energy, "
+			"Instrumentalness, "
+			"Loudness, "
+			"Speechiness, "
+			"Start_of_Fade_Out, "
+			"Tempo, "
+			"Valence) "
+			)
+		added_to_db = 0
+		for cluster in cluster_list:
+			values = (
+				"VALUES ("
+				"{0}, "
+				"{1:.8f}, "
+				"{2:.8f}, "
+				"{3:.8f}, "
+				"{4:.8f}, "
+				"{5:.8f}, "
+				"{6:.8f}, "
+				"{7:.8f}, "
+				"{8:.8f}, "
+				"{9:.8f}, "
+				"{10:.8f}, "
+				"{11:.8f}, "
+				"{12:.8f}, "
+				"{13:.8f} "
+				" ) ;".format(
+				cluster[0],
+				cluster[1],
+				cluster[2],
+				cluster[3],
+				cluster[4],
+				cluster[5],
+				cluster[6],
+				cluster[7],
+				cluster[8],
+				cluster[9],
+				cluster[10],
+				cluster[11],
+				cluster[12],
+				cluster[13])
+				)
+			query = columns + values
+			if (self.executeQuery(query,'Error adding Cluster to DB')):	
+				self.connection.commit()
+				added_to_db += 1
+		print "successfully added %d of %d clusters in cluster_list to DB"%(added_to_db,len(cluster_list))
 
-		cursor.close()
-		closeConnection(conn)
+	def insert_Songs(self, song_list=[]):
+		if not song_list:
+			print "song_list is empty"
+			return
+		columns = (
+			"INSERT INTO Song "
+			"(ClusterID, "
+			"Title, "
+			"Artist_Name, "
+			"Accousticness, "
+			"Artist_Familiarity, "
+			"Artist_Hotness, "
+			"Danceability, "
+			"Duration, "
+			"End_of_Fade_In, "
+			"Energy, "
+			"Instrumentalness, "
+			"Loudness, "
+			"Speechiness, "
+			"Start_of_Fade_Out, "
+			"Tempo, "
+			"Valence) "
+			)
+		added_to_db = 0
+		for song in song_list:	
+			values = (
+				"VALUES ("
+				"{0}, "
+				"'{1}', "
+				"'{2}', "
+				"{3:.8f}, "
+				"{4:.8f}, "
+				"{5:.8f}, "
+				"{6:.8f}, "
+				"{7:.8f}, "
+				"{8:.8f}, "
+				"{9:.8f}, "
+				"{10:.8f}, "
+				"{11:.8f}, "
+				"{12:.8f}, "
+				"{13:.8f}, "
+				"{14:.8f}, "
+				"{15:.8f} "
+				" ) ;".format(
+				song[0],
+				song[1],
+				song[2],
+				song[3],
+				song[4],
+				song[5],
+				song[6],
+				song[7],
+				song[8],
+				song[9],
+				song[10],
+				song[11],
+				song[12],
+				song[13],
+				song[14],
+				song[15])
+				)
+			query = columns + values
+			if (self.executeQuery(query,'Error adding Song to DB')):
+				self.connection.commit()
+				added_to_db += 1
+		print "successfully added %d of %d songs in song_list to DB"%(added_to_db,len(song_list))
 
-main()
+	def executeQuery(self, query, errorDescription=''):
+		try:
+			self.cursor.execute(query)
+			return True
+		except mysql.connector.Error as e:
+			print errorDescription+": "+str(e)
+			return False
 
-# def addSongToDB(cursor, songAttrTup):
-# 	# add_song_SQL = ("INSERT INTO Songs "
-# 	# 	"(ClusterID, Title, Artist, Danceability, Energy, Loudness, Tempo) "
-# 	# 	"VALUES (%d, %s, %s, %.4f, %.4f, %.4f, %.4f)")
-# 	add_song_SQL = ("INSERT INTO Songs "
-# 		"(ClusterID, Title, Artist, Danceability, Energy, Loudness, Tempo) "
-# 		"VALUES ( {0}, '{1}', '{2}', {3:.4f}, {4:.4f}, {5:.4f}, {6:.4f} ) ;".format(songAttrTup[0],songAttrTup[1],songAttrTup[2],songAttrTup[3],songAttrTup[4],songAttrTup[5],songAttrTup[6]))
-# 	if True:#isinstance(songAttrTup, (int,str,str,float,float,float,float)):
-# 		cursor.execute(add_song_SQL)
-# 		# cursor.execute(add_song_SQL, songAttrTup)
-# 	else:
-# 		print "Not a valid song tuple passed!"
+	def create_ClusterTable(self):
+		query = (
+			"CREATE TABLE Cluster "
+			"("
+			"ClusterID int(11) NOT NULL, "
+			"Accousticness decimal(12,8) NOT NULL, "
+			"Artist_Familiarity decimal(12,8) NOT NULL, "
+			"Artist_Hotness decimal(12,8) NOT NULL, "
+			"Danceability decimal(12,8) NOT NULL, "
+			"Duration decimal(12,8) NOT NULL, "
+			"End_of_Fade_In decimal(12,8) NOT NULL, "
+			"Energy decimal(12,8) NOT NULL, "
+			"Instrumentalness decimal(12,8) NOT NULL, "
+			"Loudness decimal(12,8) NOT NULL, "
+			"Speechiness decimal(12,8) NOT NULL, "
+			"Start_of_Fade_Out decimal(12,8) NOT NULL, "
+			"Tempo decimal(12,8) NOT NULL, "
+			"Valence decimal(12,8) NOT NULL, "
+			"PRIMARY KEY (ClusterID) "
+			") "
+			"ENGINE=InnoDB DEFAULT CHARSET=utf8; "
+			)
+		if self.executeQuery(query,'Error creating Cluster table in DB'):
+			print "Cluster table added."
+
+	def create_SongTable(self):
+		query = (
+			"CREATE TABLE Song "
+			"("
+			"song_DB_ID int(11) NOT NULL AUTO_INCREMENT, "
+			"ClusterID int(11) NOT NULL, "
+			"Title varchar(255) NOT NULL, "
+			"Artist_Name varchar(255) NOT NULL, "
+			"Accousticness decimal(12,8) NOT NULL, "
+			"Artist_Familiarity decimal(12,8) NOT NULL, "
+			"Artist_Hotness decimal(12,8) NOT NULL, "
+			"Danceability decimal(12,8) NOT NULL, "
+			"Duration decimal(12,8) NOT NULL, "
+			"End_of_Fade_In decimal(12,8) NOT NULL, "
+			"Energy decimal(12,8) NOT NULL, "
+			"Instrumentalness decimal(12,8) NOT NULL, "
+			"Loudness decimal(12,8) NOT NULL, "
+			"Speechiness decimal(12,8) NOT NULL, "
+			"Start_of_Fade_Out decimal(12,8) NOT NULL, "
+			"Tempo decimal(12,8) NOT NULL, "
+			"Valence decimal(12,8) NOT NULL, "
+			"PRIMARY KEY (song_DB_ID), "
+			"KEY Songs_ClusterID_INDEX (ClusterID)"
+			") "
+			"ENGINE=InnoDB AUTO_INCREMENT=86137 DEFAULT CHARSET=utf8; "
+			)
+		if self.executeQuery(query,'Error creating Song table in DB'):
+			print "Song table added."
+
+
+
+song_list = [
+	(3,'test_song_title','test_artist',0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346),
+	(3,'test_song_title','test_artist',0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346),
+	(3,'test_song_title','test_artist',0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346)]
+with Song_DB() as dbase:
+	dbase.create_SongTable()
+	dbase.insert_Songs(song_list)
+
+
 
 
