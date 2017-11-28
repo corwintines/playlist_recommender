@@ -10,16 +10,16 @@ def cluster_data(data):
     centroids = kmeans.cluster_centers_
     print centroids
     centroids_order = [
-    centroids[0],
-    centroids[1],
-    centroids[2],
-    centroids[3],
-    centroids[4],
-    centroids[5],
-    centroids[6],
-    centroids[7],
-    centroids[8],
-    centroids[9]
+    centroids[0].tolist(),
+    centroids[1].tolist(),
+    centroids[2].tolist(),
+    centroids[3].tolist(),
+    centroids[4].tolist(),
+    centroids[5].tolist(),
+    centroids[6].tolist(),
+    centroids[7].tolist(),
+    centroids[8].tolist(),
+    centroids[9].tolist()
     ]
     return labels, centroids_order
 
