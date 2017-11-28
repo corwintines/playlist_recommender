@@ -36,8 +36,8 @@ p4 = Playlist('spotify', '37i9dQZF1DX35oM5SPECmN')
 p4.get_playlist()
 
 
-p5 = Playlist('spotify', '37i9dQZF1DWSJHnPb1f0X3')
-p5.get_playlist()
+#p5 = Playlist('spotify', '37i9dQZF1DWSJHnPb1f0X3')
+#p5.get_playlist()
 
 p6 = Playlist('spotify', '37i9dQZF1DX6hvx9KDaW4s')
 p6.get_playlist()
@@ -48,8 +48,8 @@ p7.get_playlist()
 p8 = Playlist('spotify', '37i9dQZF1DX4eRPd9frC1m')
 p8.get_playlist()
 
-p9 = Playlist('spotify', '37i9dQZF1DX70RN3TfWWJh')
-p9.get_playlist()
+#p9 = Playlist('spotify', '37i9dQZF1DX70RN3TfWWJh')
+#p9.get_playlist()
 
 p10 = Playlist('spotify', '37i9dQZF1DX21UfQ8M3LWJ')
 p10.get_playlist()
@@ -499,7 +499,47 @@ def difference(attributes, attributes2):
 
 	return output
 def findAverage(playlist):
-	
+	dancibility = []
+	energy = []
+	loudness = []
+	accousticness = []
+	instrumentalness = []
+	speechness = []
+	tempo = []
+	valence = []
+
+	for i in range(0, (len(playlist[0]))):
+		for j in range(0, (len(playlist))):
+			if i == 0:
+				if((playlist[j].__getitem__(i)) != 0):
+					dancibility.append(playlist[j].__getitem__(i))
+			if i == 1:
+				if((playlist[j].__getitem__(i)) != 0):
+					energy.append(playlist[j].__getitem__(i))
+			if i == 2:
+				if((playlist[j].__getitem__(i)) != 0):
+					loudness.append(playlist[j].__getitem__(i))
+			if i == 3:
+				if((playlist[j].__getitem__(i)) != 0):
+					accousticness.append(playlist[j].__getitem__(i))
+			if i == 4:
+				if((playlist[j].__getitem__(i)) != 0):
+					instrumentalness.append(playlist[j].__getitem__(i))
+			if i == 5:
+				if((playlist[j].__getitem__(i)) != 0):
+					speechness.append(playlist[j].__getitem__(i))
+			if i == 6:
+				if((playlist[j].__getitem__(i)) != 0):
+					tempo.append(playlist[j].__getitem__(i))
+			if i == 7:
+				if((playlist[j].__getitem__(i)) != 0):
+					valence.append(playlist[j].__getitem__(i))
+
+	output = []
+	output.append((np.mean(dancibility), np.mean(energy), np.mean(loudness), np.mean(accousticness), np.mean(instrumentalness), np.mean(speechness), np.mean(tempo), np.mean(valence)))
+	return output
+
+def normalize(playlist):
 	dancibility = []
 	energy = []
 	loudness = []
@@ -527,9 +567,122 @@ def findAverage(playlist):
 				tempo.append(playlist[j].__getitem__(i))
 			if i == 7:
 				valence.append(playlist[j].__getitem__(i))
+	mindanceability = min(dancibility)
+	maxdanceability = max(dancibility)
+	minenergy = min(energy)
+	maxenergy = max(energy)
+	minloudness = min(loudness)
+	maxloudness = max(loudness)
+	minaccousticness = min(accousticness)
+	maxaccousticness = max(accousticness)
+	mininstrumentalness = min(instrumentalness)
+	maxinstrumentalness = max(instrumentalness)
+	minspeechness = min(speechness)
+	maxspeechness = max(speechness)
+	mintempo = min(tempo)
+	maxtempo = max(tempo)
+	minvalence = min(valence)
+	maxvalence = max(valence)
+
+	print "Min : ", mininstrumentalness
+	print "Max : ", maxinstrumentalness
+
+	dancibility = []
+	energy = []
+	loudness = []
+	accousticness = []
+	instrumentalness = []
+	speechness = []
+	tempo = []
+	valence = []
 	output = []
-	output.append((np.mean(dancibility), np.mean(energy), np.mean(loudness), np.mean(accousticness), np.mean(instrumentalness), np.mean(speechness), np.mean(tempo), np.mean(valence)))
+	for i in range(0, (len(playlist[0]))):
+		for j in range(0, (len(playlist))):
+			if i == 0:
+				if ((playlist[j].__getitem__(i)) != 0):
+					v = ((playlist[j].__getitem__(i))-mindanceability)/(maxdanceability-mindanceability)
+					if(v == 0):
+						dancibility.append(0.00001)
+					else:
+						dancibility.append(v)
+				else:
+					dancibility.append(0)
+			if i == 1:
+				if ((playlist[j].__getitem__(i)) != 0):
+					v = ((playlist[j].__getitem__(i))-minenergy)/(maxenergy-minenergy)
+					if(v == 0):
+						energy.append(0.00001)
+					else:
+						energy.append(v)
+				else:
+					energy.append(0)
+			if i == 2:
+				if ((playlist[j].__getitem__(i)) != 0):
+					v = ((playlist[j].__getitem__(i))-minloudness)/(maxloudness-minloudness)
+					if(v == 0):
+						loudness.append(0.00001)
+					else:
+						loudness.append(v)
+				else:
+					loudness.append(0)
+			if i == 3:
+				if ((playlist[j].__getitem__(i)) != 0):
+					v = ((playlist[j].__getitem__(i))-minaccousticness)/(maxaccousticness-minaccousticness)
+					if(v == 0):
+						accousticness.append(0.00001)
+					else:
+						accousticness.append(v)
+				else:
+					accousticness.append(0)
+			if i == 4:
+				if ((playlist[j].__getitem__(i)) != 0):
+					v = ((playlist[j].__getitem__(i))-mininstrumentalness)/(maxinstrumentalness-mininstrumentalness)
+					if(v == 0):
+						instrumentalness.append(0.00001)
+					else:
+						instrumentalness.append(v)
+				else:
+					instrumentalness.append(0)
+			if i == 5:
+				if ((playlist[j].__getitem__(i)) != 0):
+					v = ((playlist[j].__getitem__(i))-minspeechness)/(maxspeechness-minspeechness)
+					if(v == 0):
+						speechness.append(0.00001)
+					else:
+						speechness.append(v)
+				else:
+					speechness.append(0)
+			if i == 6:
+				if ((playlist[j].__getitem__(i)) != 0):
+					v = ((playlist[j].__getitem__(i))-mintempo)/(maxtempo-mintempo)
+					if(v == 0):
+						tempo.append(0.00001)
+					else:
+						tempo.append(v)
+				else:
+					tempo.append(0)
+			if i == 7:
+				if ((playlist[j].__getitem__(i)) != 0):
+					v = ((playlist[j].__getitem__(i))-minvalence)/(maxvalence-minvalence)
+					if(v == 0):
+						valence.append(0.00001)
+					else:
+						valence.append(v)
+				else:
+					valence.append(0)
+
+	output = []
+	for i in range(0,(len(dancibility))):
+		output.append((dancibility[i], energy[i], loudness[i], accousticness[i], instrumentalness[i], speechness[i], tempo[i], valence[i]))
+
 	return output
+
+
+
+
+
+
+
 
 agg1 = []
 agg2 = []
@@ -589,36 +742,72 @@ for song in range(0, (len(lastfitness.playlist_song_names)-1)):
 agg = []
 agg = agg1 + agg2 + agg3 + agg4 + agg6 + agg7 + agg8 + agg10
 
+
+# print "Fitness Song Average 2 : ", findAverage(lastfitness_attributes)
+# print "\n"
+# print "Smooth Jazz Average : ", findAverage(smoothjazz_attributes)
+# print "\n"
+# print "Country Song Average : ", findAverage(country_attributes)
+# print "\n"
+# print "Coffee Song Average : ", findAverage(coffee_attributes)
+# print "\n"
+# print "Sleep 2 Song Average : ", findAverage(sleep2_attributes)
+# print "\n"
+
+# averageoffitness = findAverage(agg)
+# averageofsmoothjazz = findAverage(smoothjazz_attributes)
+# averageofcountry = findAverage(country_attributes)
+# averageofcoffee = findAverage(coffee_attributes)
+normalized_lastfitness_attributes = normalize(lastfitness_attributes)
+averageoflastfitness = findAverage(normalized_lastfitness_attributes)
+
+normalized_sleep2 = normalize(sleep2_attributes)
+averageofsleep2 = findAverage(normalized_sleep2)
+
+normalized_country = normalize(country_attributes)
+averageofcountry = findAverage(normalized_country)
+
+normalized_coffee = normalize(coffee_attributes)
+averageofcoffee = findAverage(normalized_coffee)
+
+normalized_smoothjazz = normalize(smoothjazz_attributes)
+averageofsmoothjazz = findAverage(normalized_smoothjazz)
+
+normalized_agg = normalize(agg)
+averageofagg = findAverage(normalized_agg)
+
+print "Difference : ", difference(averageoflastfitness, averageofcountry)
+
+
+
+
+
+# print "Variation Fitness and Smooth Jazz: ", variation(averageoflastfitness, averageofsmoothjazz)
+# print "\n"
+# print "Variation Fitness and Country", variation(averageoflastfitness, averageofcountry)
+# print "\n"
+# print "Variation Fitness and Coffee", variation(averageoflastfitness, averageofcoffee)
+# print "\n"
+# print "Variation Fitness and Sleep 2", variation(averageoflastfitness, averageofsleep2)
+
+# print lastfitness_attributes
+# print averageoflastfitness
+
+
+
 '''
-print "Fitness Song Average : ", findAverage(agg)
-print "\n"
-print "Smooth Jazz Average : ", findAverage(smoothjazz_attributes)
-print "\n"
-print "Country Song Average : ", findAverage(country_attributes)
-print "\n"
-print "Coffee Song Average : ", findAverage(coffee_attributes)
-print "\n"
-print "Sleep 2 Song Average : ", findAverage(sleep2_attributes)
-print "\n"
+
+for song in lastfitness_attributes:
+	for index in range(0,len(song)-1):
+		# print len(averageoflastfitness)
+		# print averageoflastfitness[index]
+		percent_diff = abs((song[index])-(averageoflastfitness[0][index])) / averageoflastfitness[0][index]
+		if percent_diff > 1.0:
+			print 'song: ', song
+			print 'averageoflastfitness: ', averageoflastfitness
+			print 'index: ', index
+			print 'percent_diff: ', percent_diff
 '''
-
-averageoffitness = findAverage(agg)
-averageofsmoothjazz = findAverage(smoothjazz_attributes)
-averageofcountry = findAverage(country_attributes)
-averageofcoffee = findAverage(coffee_attributes)
-averageofsleep2 = findAverage(sleep2_attributes)
-averageoflastfitness = findAverage(lastfitness_attributes)
-
-
-print "Variation Fitness and Smooth Jazz: ", variation(averageoflastfitness, averageofsmoothjazz)
-print "\n"
-print "Variation Fitness and Country", variation(averageoflastfitness, averageofcountry)
-print "\n"
-print "Variation Fitness and Coffee", variation(averageoflastfitness, averageofcoffee)
-print "\n"
-print "Variation Fitness and Sleep 2", variation(averageoflastfitness, averageofsleep2)
-
-
 #song_data = query_spotify_for_attributes()
 #correlation_data = pearson_correlation_data(song_data)
 
