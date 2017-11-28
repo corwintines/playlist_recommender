@@ -28,6 +28,8 @@ To access the database:
 		-> You can execute other code/modules inside the with statement if you need run other stuff too
 		-> BEFORE FINAL RUN make sure to run delete_ALL_SONGS_IN_DB() and delete_ALL_CLUSTERS_IN_DB()
 			so we start with a clean DB and don't have bad rows in the DB (virtually no way to find them after)
+
+		-Luke
 '''
 
 class Song_DB:
@@ -89,18 +91,19 @@ class Song_DB:
 			"INSERT INTO Cluster "
 			"(ClusterID, "
 			"Accousticness, "
-			"Artist_Familiarity, "
-			"Artist_Hotness, "
-			"Danceability, "
-			"Duration, "
-			"End_of_Fade_In, "
+			# "Artist_Familiarity, "
+			# "Artist_Hotness, "
+			# "Danceability, "
+			# "Duration, "
+			# "End_of_Fade_In, "
 			"Energy, "
 			"Instrumentalness, "
 			"Loudness, "
-			"Speechiness, "
-			"Start_of_Fade_Out, "
-			"Tempo, "
-			"Valence) "
+			"Speechiness)"
+			# "Speechiness, "
+			# "Start_of_Fade_Out, "
+			# "Tempo, "
+			# "Valence) "
 			)
 		added_to_db = 0
 		for cluster in cluster_list:
@@ -419,8 +422,14 @@ class Song_DB:
 		query = "SELECT * FROM "+tableName+" WHERE ClusterID="+str(clusterID)+";"
 		if self.executeQuery(query,'Error selecting songs by ClusterID'):
 			print "Select successful."
+	
+	def select_Song_By_Other(self, tableName):
+		query = "SELECT song_DB_ID, ClusterID, Title FROM "+tableName+" WHERE Valence > 0.8;"
+		if self.executeQuery(query,'Error selecting songs by ClusterID'):
+			print "Select successful."
 
 
+## FOR TESTING ONLY ##
 # cluster_list = [
 # 	(1,0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346),
 # 	(2,0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346),
