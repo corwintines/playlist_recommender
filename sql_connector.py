@@ -12,18 +12,19 @@ To access the database:
 			your ssh and mysql usernames and passwords
 
 *** Important ***
-		-> Wrap the Song_DB() object you create in with statement like this:
+		-> Wrap the Song_DB() object you create in a 'with as' statement like this:
 
 				with Song_DB() as dbase:
 					dbase.create_SongTable()
 					dbase.insert_Songs(song_list)
 					... all the database function calls ...
 
-		If you don't wrap in the 'with Song_DB() as' statement it leaves connections half
-		open on my computer and acts buggy af.
+		If you don't wrap in the 'with Song_DB() as somename:' statement it leaves connections half
+		open on my computer and acts buggy AF.
 
-		-> You can execute other code/modules in the with statement if you need
-		-> If you need to insert only one song or one cluster, just put it in a list first
+		-> You can execute other code/modules inside the with statement if you need run other stuff too
+		-> BEFORE FINAL RUN make sure to run delete_ALL_SONGS_IN_DB() and delete_ALL_CLUSTERS_IN_DB()
+			so we start with a clean DB and don't have bad rows in the DB (virtually no way to find them after)
 '''
 
 class Song_DB:
@@ -267,15 +268,36 @@ class Song_DB:
 		if self.executeQuery(query,'Error creating Song table in DB'):
 			print "Song table added."
 
+	def delete_ALL_SONGS_IN_DB(self):
+		query = "TRUNCATE Song;"
+		if self.executeQuery(query,'Error deleting all songs from Song table in DB'):
+			print "All songs in Song table deleted."
 
+	def delete_ALL_CLUSTERS_IN_DB(self):
+		query = "TRUNCATE Cluster;"
+		if self.executeQuery(query,'Error deleting all clusters from Cluster table in DB'):
+			print "All clusters in Cluster table deleted."
+
+
+cluster_list = [
+	(1,0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346),
+	(2,0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346),
+	(3,0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346)]
 
 song_list = [
 	(3,'test_song_title','test_artist',0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346),
 	(3,'test_song_title','test_artist',0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346),
 	(3,'test_song_title','test_artist',0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346)]
+
 with Song_DB() as dbase:
 	dbase.create_SongTable()
+	dbase.create_ClusterTable()
+
 	dbase.insert_Songs(song_list)
+	dbase.insert_Clusters(cluster_list)
+
+	# dbase.delete_ALL_CLUSTERS_IN_DB()
+	# dbase.delete_ALL_SONGS_IN_DB()
 
 
 
