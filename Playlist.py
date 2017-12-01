@@ -50,6 +50,7 @@ class Playlist:
 
         data = {'song_uri': song_uris}
         attributes = requests.get('https://playlist-recommender.herokuapp.com/song_attributes', data)
+        print attributes.text
         if attributes.text != "Server Error":
             attributes = attributes.json()
 
