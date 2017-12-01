@@ -1,3 +1,7 @@
+# A class for more securely handling our song data when it is outside of the data base. Less
+# potential for indexing errors compared with using other storage objects.  Also automatically
+# checks when a song is created that it also has all the required attributes populated and can 
+# be entered in the DataBase.  Check value of Song.hasData before any insert/analysis operations.
 
 class Song:
 	def __init__(self, song_dictionary=None):
@@ -11,6 +15,8 @@ class Song:
 			"duration" : None,
 			"end_of_fade_in" : None,
 			"energy" : None,
+			"rec_value": None,
+			"from_playlist" : None,
 			"instrumentalness" : None,
 			"loudness" : None,
 			"speechiness" : None,
