@@ -38,9 +38,10 @@ class TrainingPlaylist:
         self.groundtruth_energy = []
         self.groundtruth_instrumentalness = []
         self.groundtruth_loudness = []
-        self.groundtruth_speechness = []
+        self.groundtruth_speechiness = []
         self.groundtruth_tempo = []
         self.groundtruth_valence = []
+        self.groundtruth_combined = []
 
 
     def get_playlist(self):
@@ -73,7 +74,7 @@ class TrainingPlaylist:
 
 
     def construct_training_groundtruths(self):
-        for song in range(0, len(self.playlist_song_names)):
+        for song in range(0, len(self.playlist_song_names)-1):
             if song%5 is 0:
                 self.groundtruth_song_names.append(self.playlist_song_names[song])
                 self.groundtruth_song_artists.append(self.playlist_song_artists[song])
@@ -82,7 +83,7 @@ class TrainingPlaylist:
                 self.groundtruth_energy.append(self.playlist_energy[song])
                 self.groundtruth_loudness.append(self.playlist_loudness[song])
                 self.groundtruth_instrumentalness.append(self.playlist_instrumentalness[song])
-                self.groundtruth_speechness.append(self.playlist_speechness[song])
+                self.groundtruth_speechiness.append(self.playlist_speechness[song])
                 self.groundtruth_tempo.append(self.playlist_tempo[song])
                 self.groundtruth_valence.append(self.playlist_valence[song])
 
@@ -97,6 +98,8 @@ class TrainingPlaylist:
                 self.training_speechiness.append(self.playlist_speechness[song])
                 self.training_tempo.append(self.playlist_tempo[song])
                 self.training_valence.append(self.playlist_valence[song])
+
+        self.construct_combined_ground_truth()
 
 
     def generate_playlist_vector(self):
@@ -119,6 +122,22 @@ class TrainingPlaylist:
             valence += self.training_valence[element]
 
         self.training_attribute_vector = [accousticness/len(self.training_accousticness), dancibility/len(self.training_dancibility), energy/len(self.training_energy), instrumentalness/len(self.training_instrumentalness), loudness/len(self.training_loudness), speechiness/len(self.training_speechiness), tempo/len(self.training_tempo), valence/len(self.training_valence)]
+
+
+    def construct_combined_ground_truth(self):
+        for song in range(0,len(self.groundtruth_song_names)):
+            print song
+            self.groundtruth_combined.append([
+                self.groundtruth_accousticness[song],
+                self.groundtruth_dancibility[song],
+                self.groundtruth_energy[song],
+                self.groundtruth_instrumentalness[song],
+                self.groundtruth_loudness[song],
+                self.groundtruth_speechiness[song],
+                self.groundtruth_tempo[song],
+                self.groundtruth_valence[song]
+            ])
+
 
     def find_cluster(self):
         print(self.training_cluster_index)
