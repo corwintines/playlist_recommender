@@ -18,24 +18,23 @@ import pickle
 # 	}
 
 def normalize_from_pickle(in_filepath):
-	inf = open(in_filepath,'rb')
-	song_list = pickle.load(inf)
-	inf.close()
+	with open(in_filepath,'rb') as f:
+		song_list = pickle.load(f)
 
-	outpath = '/Users/Yash/Desktop/playlist_recommender/pickles'
-	outfile = os.path.join(outpath,"normalized_"+os.path.basename(in_filepath))
-	outf = open(outfile, 'wb')
-	normalized_song_list = normalize(song_list)
-	pickle.dump(normalized_song_list, outf)
-	outf.close()
-	for song in normalized_song_list:
-		print song.attributes
+		outpath = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/training_data/pickle/normalized'
+		outfile = os.path.join(outpath,"normalized_"+os.path.basename(in_filepath))
+		outf = open(outfile, 'wb')
+		normalized_song_list = normalize(song_list)
+		pickle.dump(normalized_song_list, outf)
+		outf.close()
+		for song in normalized_song_list:
+			print song.attributes
 
 def findAverage_from_pickle(in_filepath):
 	inf = open(in_filepath,'rb')
 	song_list = pickle.load(inf)
 	inf.close()
-	outpath = '/Users/Yash/Desktop/playlist_recommender/pickles'
+	outpath = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/training_data/pickle/normalized'
 	outfile = os.path.join(outpath,"agg_"+os.path.basename(in_filepath))
 	outf = open(outfile, 'wb')
 	findAverage_song_list = findAverage(song_list)
@@ -49,7 +48,7 @@ def findDistance_from_pickle(in_filepath):
 	inf = open(in_filepath,'rb')
 	song_list = pickle.load(inf)
 	inf.close()
-	outpath = '/Users/Yash/Desktop/playlist_recommender/pickles'
+	outpath = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/training_data/pickle/normalized'
 	outfile = os.path.join(outpath,"distance_"+os.path.basename(in_filepath))
 	outf = open(outfile, 'wb')
 	findDistance_song_list = findDistance(song_list)
@@ -194,10 +193,10 @@ def findAverage(song_list):
 	return playlist_compare_dictionary
 
 
-def findDistance(aggregate_song_list1, aggregate_song_list2):
+def findDistance(aggregate_song_list1, list1_name, aggregate_song_list2, list2_name):
 	distance = {
-		"playlist_type_1" : aggregate_song_list1['playlist_type_1'],
-		"playlist_type_2" : aggregate_song_list2['playlist_type_1'],
+		"playlist_type_1" : list1_name,
+		"playlist_type_2" : list2_name,
 		"accousticness" : abs(aggregate_song_list1['accousticness'] - aggregate_song_list2['accousticness']),
 		"danceability" :  abs(aggregate_song_list1['danceability'] - aggregate_song_list2['danceability']),
 		"energy" :  abs(aggregate_song_list1['energy'] - aggregate_song_list2['energy']),
@@ -210,9 +209,9 @@ def findDistance(aggregate_song_list1, aggregate_song_list2):
 	return distance
 
 
-normalize_from_pickle('/Users/Yash/Desktop/playlist_recommender/song_list_pickles/Country.txt')
-findAverage_from_pickle('/Users/Yash/Desktop/playlist_recommender/normalized_song_list_pickles/normalized_Country.txt')
-findDistance_from_pickle('/Users/Yash/Desktop/playlist_recommender/findAverage_song_list_pickles/agg_normalized_Country.txt')
+# normalize_from_pickle('/Users/Yash/Desktop/playlist_recommender/song_list_pickles/Country.txt')
+# findAverage_from_pickle('/Users/Yash/Desktop/playlist_recommender/normalized_song_list_pickles/normalized_Country.txt')
+# findDistance_from_pickle('/Users/Yash/Desktop/playlist_recommender/findAverage_song_list_pickles/agg_normalized_Country.txt')
 
 
 
