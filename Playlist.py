@@ -50,16 +50,17 @@ class Playlist:
 
         data = {'song_uri': song_uris}
         attributes = requests.get('https://playlist-recommender.herokuapp.com/song_attributes', data)
-        attributes = attributes.json()
+        if attributes.text != "Server Error":
+            attributes = attributes.json()
 
-        self.playlist_accousticness = attributes[0]
-        self.playlist_dancibility = attributes[1]
-        self.playlist_energy = attributes[2]
-        self.playlist_loudness = attributes[3]
-        self.playlist_instrumentalness = attributes[4]
-        self.playlist_speechness = attributes[5]
-        self.playlist_tempo = attributes[6]
-        self.playlist_valence = attributes[7]
+            self.playlist_accousticness = attributes[0]
+            self.playlist_dancibility = attributes[1]
+            self.playlist_energy = attributes[2]
+            self.playlist_loudness = attributes[3]
+            self.playlist_instrumentalness = attributes[4]
+            self.playlist_speechness = attributes[5]
+            self.playlist_tempo = attributes[6]
+            self.playlist_valence = attributes[7]
 
 
     def generate_playlist_vector(self):

@@ -5,8 +5,10 @@ from k_means_clustering_dataset import *
 import pickle
 
 # p = Playlist('spotify','37i9dQZF1DWZeKCadgRdKQ')
-# p = Playlist('spotify','37i9dQZF1DX76Wlfdnj7AP')
-# p.get_playlist()
+p = Playlist('spotify','37i9dQZF1DX4HwNAFq2CF0')
+p.get_playlist()
+print p.playlist_song_names
+print len(p.playlist_song_names)
 # p.generate_playlist_vector()
 # print p.playlist_attribute_vector
 
@@ -27,22 +29,22 @@ import pickle
 # pickle.dump(song_data, song_data_output)
 # song_data_output.close()
 
-with open('all_song_data.txt', 'rb') as all_songs:
-    allsongs = pickle.load(all_songs)
-    k_means_labels, k_means_centroids = cluster_data(allsongs)
-    # (clusterid, title, artist, acousticness, artist_familiarity, artist_hotness, dancability, duration, endOfFadeIn, energy, intrumentalness, loudness, speechiness, startOfFadeOut, tempo, valence)
-    combined_cluster_song_data = combine_cluster_song_data(allsongs, k_means_labels)
-    allsongs_combined_cluster_song_data_output = open('all_songs_cluster_combined.txt', 'wb')
-    pickle.dump(combined_cluster_song_data, allsongs_combined_cluster_song_data_output)
-    allsongs_combined_cluster_song_data_output.close()
-    centroid_output = open('centroids.txt', 'wb')
-    pickle.dump(k_means_centroids, centroid_output)
-    centroid_output.close()
-
-with open('centroids.txt', 'rb') as f:
-    data = pickle.load(f)
-    print data
-f.close()
+# with open('all_song_data.txt', 'rb') as all_songs:
+#     allsongs = pickle.load(all_songs)
+#     k_means_labels, k_means_centroids = cluster_data(allsongs)
+#     # (clusterid, title, artist, acousticness, artist_familiarity, artist_hotness, dancability, duration, endOfFadeIn, energy, intrumentalness, loudness, speechiness, startOfFadeOut, tempo, valence)
+#     combined_cluster_song_data = combine_cluster_song_data(allsongs, k_means_labels)
+#     allsongs_combined_cluster_song_data_output = open('all_songs_cluster_combined.txt', 'wb')
+#     pickle.dump(combined_cluster_song_data, allsongs_combined_cluster_song_data_output)
+#     allsongs_combined_cluster_song_data_output.close()
+#     centroid_output = open('centroids.txt', 'wb')
+#     pickle.dump(k_means_centroids, centroid_output)
+#     centroid_output.close()
+#
+# with open('centroids.txt', 'rb') as f:
+#     data = pickle.load(f)
+#     print data
+# f.close()
 
 # all_song_data = []
 # with open('song_data0.txt', 'rb') as song0:
