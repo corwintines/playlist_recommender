@@ -53,9 +53,40 @@ def normalize_distance_values(playlist_distances):
 
 
 def apply_normalized_distances(playlist_distances):
-	print playlist_distances
+	iteration = 0
+	for key in playlist_distances:
+		if key == 'agg_normalized_R_B.txt':
+			song_file = 'R_B.txt'
+		else:
+			song_file = str(key.split('_')[2])
+		with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data', 'pickle', 'song_lists', song_file)) as data:
+			song_data = pickle.load(data)
+			for song in song_data:
+				song.attributes.update({"rec_value":playlist_distances[key]})
+
+			song_file_output = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data', 'pickle', 'song_lists_with_recommended', song_file), 'wb')
+			pickle.dump(song_data, song_file_output)
+			song_file_output.close()
+
+
+# def check_songs(playlist_distances):
+# 	for key in playlist_distances:
+# 		if key == 'agg_normalized_R_B.txt':
+# 			song_file = 'R_B.txt'
+# 		else:
+# 			song_file = str(key.split('_')[2])
+# 		with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data', 'pickle', 'song_lists_with_recommended', song_file)) as data:
+# 			song_data = pickle.load(data)
+# 			print song_data[0].attributes
+
+def produce_training_playlists(playlist_distances):
+
+
+
+def produce_test_playlists(playlist_distances):
 
 
 playlist_distances = get_distance_between_playlist_types()
 normalized_playlist_distances = normalize_distance_values(playlist_distances)
 apply_normalized_distances(normalized_playlist_distances)
+# check_songs(normalized_playlist_distances)
