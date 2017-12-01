@@ -27,8 +27,8 @@ def main():
     }
 
     network = NeuralNet(settings)
-    training_set   = dataset
-    test_set       = dataset
+    training_set = dataset
+    test_set = dataset
 
     RMSprop(network, training_set, test_set, cost_function, ERROR_LIMIT=0.1)
     network.save_network_to_file("%s.pkl" % "filename")
