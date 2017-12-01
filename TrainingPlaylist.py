@@ -126,7 +126,6 @@ class TrainingPlaylist:
 
     def construct_combined_ground_truth(self):
         for song in range(0,len(self.groundtruth_song_names)):
-            print song
             self.groundtruth_combined.append([
                 self.groundtruth_accousticness[song],
                 self.groundtruth_dancibility[song],

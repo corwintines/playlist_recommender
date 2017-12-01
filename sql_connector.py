@@ -8,6 +8,7 @@ import pickle
 import random
 import decimal
 import Song
+import Playlist
 '''
 To access the database:
 
@@ -83,6 +84,16 @@ class Song_DB:
 		except:
 			print "Error in Song_DB: '__exit__()' -> SSH server connection not successfully closed"
 
+	def CLEAR_ALL_SONGS_IN_DB(self):
+		query = "TRUNCATE Song;"
+		if self.executeQuery_Bool(query,'Error deleting all songs from Song table in DB'):
+			print "All records in Song table deleted."
+
+	def CLEAR_ALL_PLAYLIST_COMPARE(self):
+		query = "TRUNCATE Playlist_Compare;"
+		if self.executeQuery_Bool(query,'Error deleting all Playlist_Compare records in DB'):
+			print "All records in Playlist_Compare table deleted."
+
 	def createTable_Cluster(self):
 		query = (
 			"CREATE TABLE Cluster "
@@ -105,7 +116,8 @@ class Song_DB:
 			"CREATE TABLE Playlist_Compare "
 			"("
 			"id int(11) NOT NULL AUTO_INCREMENT, "
-			"compared_to varchar(255) NOT NULL, "
+			"playlist_type_1 varchar(255) NOT NULL, "
+			"playlist_type_2 varchar(255) NOT NULL, "
 			"accousticness decimal(12,8) NOT NULL, "
 			"danceability decimal(12,8) NOT NULL, "
 			"energy decimal(12,8) NOT NULL, "
@@ -129,6 +141,7 @@ class Song_DB:
 			"cluster_id int(11) NOT NULL, "
 			"title varchar(255) NOT NULL, "
 			"artist_name varchar(255) NOT NULL, "
+			"from_playlist varchar(255), "
 			"accousticness decimal(12,8) NOT NULL, "
 			"artist_familiarity decimal(12,8), "
 			"artist_hotness decimal(12,8), "
@@ -138,6 +151,7 @@ class Song_DB:
 			"energy decimal(12,8) NOT NULL, "
 			"instrumentalness decimal(12,8) NOT NULL, "
 			"loudness decimal(12,8) NOT NULL, "
+			"rec_value decimal(12,8), "
 			"speechiness decimal(12,8) NOT NULL, "
 			"start_of_fade_out decimal(12,8), "
 			"tempo decimal(12,8) NOT NULL, "
@@ -150,6 +164,14 @@ class Song_DB:
 		if self.executeQuery_Bool(query,'Error creating Song table in DB'):
 			print "Song table added."
 
+	def executeQuery_Bool(self, query, errorDescription=''):
+		try:
+			self.cursor.execute(query)
+			return True
+		except mysql.connector.Error as e:
+			print errorDescription+": "+str(e)
+			return False
+
 	def executeQuery_Return(self, query, errorDescription=''):
 		result = []
 		try:
@@ -161,13 +183,26 @@ class Song_DB:
 			print errorDescription+": "+str(e)
 		return result		
 
-	def executeQuery_Bool(self, query, errorDescription=''):
-		try:
-			self.cursor.execute(query)
-			return True
-		except mysql.connector.Error as e:
-			print errorDescription+": "+str(e)
-			return False
+	def import_From_Playlist(self,playlist):
+		songs = []
+		for i in range(0,len(playlist.playlist_song_names)):
+			song_attributes = {
+				"accousticness" : playlist.playlist_accousticness[i],
+				"artist_name" : playlist.playlist_song_artists[i],
+				"cluster_id" : 9999, # cluster_id = 9999 indicates not clustered
+				"danceability" : playlist.playlist_dancibility[i],
+				"energy" : playlist.playlist_energy[i],
+				"from_playlist" : playlist.playlist_playlistname,
+				"instrumentalness" : playlist.playlist_instrumentalness[i],
+				"loudness" : playlist.playlist_loudness[i],
+				"speechiness" : playlist.playlist_speechness[i],
+				"tempo" : playlist.playlist_tempo[i],
+				"title" : playlist.playlist_song_names[i],
+				"valence" : playlist.playlist_valence[i]
+				}
+			song = Song(song_attributes)
+			songs.append(song)
+		self.insert_Songs(songs)
 
 	def insert_Clusters(self, cluster_list=[]):
 		if not cluster_list:
@@ -228,7 +263,7 @@ class Song_DB:
 		query = columns + values
 		if (self.executeQuery_Bool(query,'Error adding fitness delta vector to DB')):
 			self.connection.commit()
-			print "Added playlist delta vector (fitness, %s)"%playlist_compare_dict['compared_to']
+			print "Added playlist delta vector (%s, %s)"%(playlist_compare_dict['playlist_type_1'],playlist_compare_dict['playlist_type_2'])
 
 	def insert_Songs(self, song_list=[]):
 		if not song_list:
@@ -236,7 +271,7 @@ class Song_DB:
 			return
 		songs_added = 0
 		for song in song_list:
-			if not song.validForDatabase():
+			if not song.hasdata:
 				print "song does not have required attributes populated with valid data"
 			else:
 				columns = "INSERT INTO Song ("
@@ -331,7 +366,7 @@ class Song_DB:
 	def select_Song_By_ClusterID(self, tableName, clusterID):
 		query = "SELECT * FROM "+tableName+" WHERE ClusterID="+str(clusterID)+";"
 		return self.executeQuery_Return(query,'Error executing select_Song_By_ClusterID()')
-	
+
 
 
 
@@ -581,7 +616,8 @@ song_dictionary = {
 	}
 
 playlist_compare_dictionary = {
-	"compared_to" : 'rock',
+	"playlist_type_1" : 'fitness',
+	"playlist_type_2" : 'rock',
 	"accousticness" : 0.4,
 	"danceability" : 0.4,
 	"energy" : 0.4,
@@ -598,13 +634,17 @@ test_list = []
 test_list.append(song_test)
 test_list.append(song_test)
 with Song_DB() as dbase:
-	dbase.createTable_Song()
-	dbase.insert_Songs(test_list)
-	dbase.createTable_Playlist_Compare()
-	dbase.insert_Playlist_Compare(playlist_compare_dictionary)
-	songs = dbase.select_By_Query("Select * from Song;")
-	for song in songs:
-		print song
+	# dbase.CLEAR_ALL_SONGS_IN_DB()
+	# dbase.CLEAR_ALL_PLAYLIST_COMPARE()
+	# dbase.createTable_Song()
+	# dbase.createTable_Cluster()
+	# dbase.createTable_Playlist_Compare()
+	# dbase.insert_Songs(test_list)
+	# dbase.createTable_Playlist_Compare()
+	# dbase.insert_Playlist_Compare(playlist_compare_dictionary)
+	# songs = dbase.select_By_Query("Select * from Song;")
+	# for song in songs:
+	# 	print song
 
 
 
