@@ -58,13 +58,10 @@ def getSongs_MSD(MSD_data_folder_path):
 				f = h5.File(filepath,"r")
 				songDict = getSongAttributes_MSD(f)
 				song = Song.Song(songDict)
-				print songDict
-				# song = convertSongDictToTup(songDict)
-				# song_list.append(song)
+				song_list.append(song)
 				count += 1
 				if count%500 == 0:
 					print "processed %d songs..."%count
-				# print song.attributes
 	print "Successfully extracted %d songs."%count
 	return song_list
 
