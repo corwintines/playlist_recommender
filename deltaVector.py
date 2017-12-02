@@ -157,6 +157,8 @@ def normalize(song_list):
 			song.attributes['valence'] = v
 	return song_list
 
+# Function that calculates the aggregate vector given
+# a list of songs, outputs a dictionary of the aggregate vector
 def findAverage(song_list):
 	danceability = []
 	energy = []
@@ -194,7 +196,10 @@ def findAverage(song_list):
 
 	return playlist_compare_dictionary
 
-
+# finds the distance between two aggregate song objects
+# the list1_name and list2_name should be the name
+# of the playlist types that the distance is being
+# calculated between
 def findDistance(aggregate_song_list1, list1_name, aggregate_song_list2, list2_name):
 	distance = {
 		"playlist_type_1" : list1_name,
