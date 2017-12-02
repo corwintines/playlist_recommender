@@ -5,9 +5,15 @@ import Cluster
 import hdf5_access_Luke
 import pickle_tools_Luke
 import os
+import Playlist
 
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
+playlist = Playlist.Playlist(username='spotify', playlistname='37i9dQZF1DX76Wlfdnj7AP')
+playlist.get_playlist()
+print 'done'
+
+
+# dir_path = os.path.dirname(os.path.realpath(__file__))
 # agg_normalized = os.path.join(dir_path,'training_data/pickle/agg_normalized')
 # normalized = os.path.join(dir_path,'training_data/pickle/normalized')
 # song_lists = os.path.join(dir_path,'training_data/pickle/song_lists')
@@ -18,10 +24,12 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 # pickle_file_name = 'song_list_mined_from_hdf5.txt'
 # out_path = os.path.join(output_folder,pickle_file_name)
 
-fpath = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/training_data/pickle/song_lists/Country.txt'
-songlist = pickle_tools_Luke.returnObjectFromPickle(fpath)
-for song in songlist:
-	print song.attributes
+# fpath = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/training_data/pickle/song_lists/Country.txt'
+# songlist = pickle_tools_Luke.returnObjectFromPickle(fpath)
+# for song in songlist:
+# 	print song.attributes
+
+
 
 # msd_songs = pickle_tools_Luke.returnObjectFromPickle(out_path)
 # spotify_songs = pickle_tools_Luke.returnObjectFromPickle('/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/msd_data/all_song_data.txt')

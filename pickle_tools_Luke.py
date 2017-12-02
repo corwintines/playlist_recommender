@@ -15,6 +15,9 @@ def writeToPickle(object_to_write, out_pickle_filepath):
 
 def returnObjectFromPickle(in_pickle_filepath):
 	if os.path.isfile(in_pickle_filepath):
+		if '.DS_Store' in in_pickle_filepath:
+			print ".DS_Store file skipped. Eff these files."
+			return None
 		try:
 			with open(in_pickle_filepath,'rb') as f:
 				print in_pickle_filepath

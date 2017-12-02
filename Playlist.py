@@ -1,4 +1,6 @@
 import requests
+import json
+
 
 class Playlist:
     def __init__(self, username, playlistname):
@@ -40,7 +42,6 @@ class Playlist:
         playlist = requests.get('https://playlist-recommender.herokuapp.com/get_playlist', data)
         if playlist.text != "Server Error":
             playlist = playlist.json()
-
             self.playlist_song_names = playlist[0]
             self.playlist_song_artists = playlist[1]
 
@@ -52,8 +53,11 @@ class Playlist:
 
             data = {'song_uri': song_uris}
             attributes = requests.get('https://playlist-recommender.herokuapp.com/song_attributes', data)
+            print attributes.text
             if attributes.text != "Server Error":
                 attributes = attributes.json()
+                with open('/Users/lucasjakober/Documents/Semester 9/Combined Course Project/json_playlist_as_text.txt', 'w') as outfile:
+                    json.dump(attributes, outfile)
 
                 self.playlist_accousticness = attributes[0]
                 self.playlist_dancibility = attributes[1]
