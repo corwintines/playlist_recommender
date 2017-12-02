@@ -52,7 +52,7 @@ def main():
     cost_function = cross_entropy_cost
 
     RMSprop(network, training_set, test_set, cost_function, ERROR_LIMIT=0.1, max_iterations=100000, batch_size=1800)
-    network.save_network_to_file("%s.pkl" % "filename3")
+    network.save_network_to_file("%s.pkl" % "training1")
 
 
 main()
