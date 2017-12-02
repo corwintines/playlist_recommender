@@ -138,9 +138,9 @@ class Song_DB:
 			"CREATE TABLE Song "
 			"("
 			"song_db_id int(11) NOT NULL AUTO_INCREMENT, "
-			"cluster_id int(11) NOT NULL, "
-			"title varchar(255) NOT NULL, "
-			"artist_name varchar(255) NOT NULL, "
+			"cluster_id int(11) NOT NULL DEFAULT 9999, "
+			"title varchar(255) NOT NULL DEFAULT 'no title', "
+			"artist_name varchar(255) NOT NULL DEFAULT 'no artist', "
 			"from_playlist varchar(255), "
 			"accousticness decimal(12,8) NOT NULL, "
 			"artist_familiarity decimal(12,8), "
@@ -156,13 +156,44 @@ class Song_DB:
 			"start_of_fade_out decimal(12,8), "
 			"tempo decimal(12,8) NOT NULL, "
 			"valence decimal(12,8) NOT NULL, "
-			"PRIMARY KEY (song_DB_ID), "
-			"KEY Songs_ClusterID_INDEX (cluster_id)"
+			"PRIMARY KEY (song_db_id), "
+			"KEY Song_ClusterID_INDEX (cluster_id)"
 			") "
-			"ENGINE=InnoDB AUTO_INCREMENT=86137 DEFAULT CHARSET=utf8; "
+			"ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8; "
 			)
 		if self.executeQuery_Bool(query,'Error creating Song table in DB'):
 			print "Song table added."
+
+	def createTable_Training_Song(self):
+		query = (
+			"CREATE TABLE Training_Song "
+			"("
+			"song_db_id int(11) NOT NULL AUTO_INCREMENT, "
+			"cluster_id int(11) NOT NULL DEFAULT 9999, "
+			"title varchar(255) NOT NULL DEFAULT 'no title', "
+			"artist_name varchar(255) NOT NULL DEFAULT 'no artist', "
+			"from_playlist varchar(255), "
+			"accousticness decimal(12,8) NOT NULL, "
+			"artist_familiarity decimal(12,8), "
+			"artist_hotness decimal(12,8), "
+			"danceability decimal(12,8) NOT NULL, "
+			"duration decimal(12,8), "
+			"end_of_fade_in decimal(12,8), "
+			"energy decimal(12,8) NOT NULL, "
+			"instrumentalness decimal(12,8) NOT NULL, "
+			"loudness decimal(12,8) NOT NULL, "
+			"rec_value decimal(12,8) NOT NULL,"
+			"speechiness decimal(12,8) NOT NULL, "
+			"start_of_fade_out decimal(12,8), "
+			"tempo decimal(12,8) NOT NULL, "
+			"valence decimal(12,8) NOT NULL, "
+			"PRIMARY KEY (song_db_id), "
+			"KEY Training_Song_REC_VALUE_INDEX (rec_value)"
+			") "
+			"ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8; "
+			)
+		if self.executeQuery_Bool(query,'Error creating Song table in DB'):
+			print "Training_Song table added."
 
 	def executeQuery_Bool(self, query, errorDescription=''):
 		try:
@@ -271,7 +302,7 @@ class Song_DB:
 			return
 		songs_added = 0
 		for song in song_list:
-			if not song.hasdata:
+			if not song.isValid():
 				print "song does not have required attributes populated with valid data"
 			else:
 				columns = "INSERT INTO Song ("
@@ -359,6 +390,43 @@ class Song_DB:
 		# 		self.connection.commit()
 		# 		added_to_db += 1
 		# print "successfully added %d of %d songs in song_list to DB"%(added_to_db,len(song_list))		
+
+	def insert_Training_Songs(self, song_list=[]):
+			if not song_list:
+				print "song_list is empty"
+				return
+			songs_added = 0
+			for song in song_list:
+				if not song.isValid():
+					print "training song does not have required attributes populated with valid data"
+				else:
+					# print song.attributes['title']
+					# print isinstance(song.attributes['title'],str)
+					# print type(song.attributes['title'])
+					columns = "INSERT INTO Training_Song ("
+					values = "VALUES ("
+					for attribute, value in song.attributes.iteritems():
+						if value is None:
+							columns = columns + attribute + ", "
+							values = values + "NULL, "
+						elif isinstance(value,float):
+							columns = columns + attribute + ", "
+							values = values + "{0:.8f}, ".format(value)						
+						elif isinstance(value,str) or isinstance(value,unicode):
+							value = value.replace("'","")
+							value = value.encode(encoding="utf-8", errors="ignore")
+							columns = columns + attribute + ", "
+							values = values + "'{0}', ".format(value)
+						elif isinstance(value,int):
+							columns = columns + attribute + ", "
+							values = values + "{0}, ".format(value)
+					columns = columns[:-2] + " ) "
+					values = values[:-2] + " ) ;"
+					query = columns + values
+					if (self.executeQuery_Bool(query,'Error adding song to DB')):
+						self.connection.commit()
+						songs_added += 1
+			print "successfully added %d of %d training songs in song_list to DB"%(songs_added,len(song_list))
 
 	def select_By_Query(self, query=""):
 		return self.executeQuery_Return(query,'Error executing select_By_Query()')
@@ -592,51 +660,11 @@ class Song_DB:
 		if self.executeQuery_Bool(query,'Error selecting songs by ClusterID'):
 			print "Select successful."
 
-
-
-
-
-song_dictionary = {
-	"accousticness" : 0.4,
-	"artist_name" : 'test_artist',
-	"artist_familiarity" : None,
-	"artist_hotness" : None,
-	"cluster_id" : 4,
-	"danceability" : 0.4,
-	"duration" : None,
-	"end_of_fade_in" : None,
-	"energy" : 0.4,
-	"instrumentalness" : 0.4,
-	"loudness" : 0.4,
-	"speechiness" : 0.4,
-	"start_of_fade_out" : None,
-	"tempo" : 0.4,
-	"title" : 'test_title',
-	"valence" : 0.4
-	}
-
-playlist_compare_dictionary = {
-	"playlist_type_1" : 'fitness',
-	"playlist_type_2" : 'rock',
-	"accousticness" : 0.4,
-	"danceability" : 0.4,
-	"energy" : 0.4,
-	"instrumentalness" : 0.4,
-	"loudness" : 0.4,
-	"speechiness" : 0.4,
-	"tempo" : 0.4,
-	"valence" : 0.4
-	}
-
-
-song_test = Song.Song(song_dictionary)
-test_list = []
-test_list.append(song_test)
-test_list.append(song_test)
-with Song_DB() as dbase:
+# with Song_DB() as dbase:
 	# dbase.CLEAR_ALL_SONGS_IN_DB()
 	# dbase.CLEAR_ALL_PLAYLIST_COMPARE()
 	# dbase.createTable_Song()
+	# dbase.createTable_Training_Song()
 	# dbase.createTable_Cluster()
 	# dbase.createTable_Playlist_Compare()
 	# dbase.insert_Songs(test_list)
@@ -644,11 +672,50 @@ with Song_DB() as dbase:
 	# dbase.insert_Playlist_Compare(playlist_compare_dictionary)
 	# songs = dbase.select_By_Query("Select * from Song;")
 	# for song in songs:
-	# 	print song
+	# print song
 
 
 
 ## FOR TESTING ONLY ##
+# song_dictionary = {
+# 	"accousticness" : 0.4,
+# 	"artist_name" : 'test_artist',
+# 	"artist_familiarity" : None,
+# 	"artist_hotness" : None,
+# 	"cluster_id" : 4,
+# 	"danceability" : 0.4,
+# 	"duration" : None,
+# 	"end_of_fade_in" : None,
+# 	"energy" : 0.4,
+# 	"instrumentalness" : 0.4,
+# 	"loudness" : 0.4,
+# 	"speechiness" : 0.4,
+# 	"start_of_fade_out" : None,
+# 	"tempo" : 0.4,
+# 	"title" : 'test_title',
+# 	"valence" : 0.4
+# 	}
+
+# playlist_compare_dictionary = {
+# 	"playlist_type_1" : 'fitness',
+# 	"playlist_type_2" : 'rock',
+# 	"accousticness" : 0.4,
+# 	"danceability" : 0.4,
+# 	"energy" : 0.4,
+# 	"instrumentalness" : 0.4,
+# 	"loudness" : 0.4,
+# 	"speechiness" : 0.4,
+# 	"tempo" : 0.4,
+# 	"valence" : 0.4
+# 	}
+
+
+# song_test = Song.Song(song_dictionary)
+# test_list = []
+# test_list.append(song_test)
+# test_list.append(song_test)
+
+
 # cluster_list = [
 # 	(1,0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346),
 # 	(2,0.342345,0.5345,6345.346,0.34634,2643.346,2456.243464,0.23456234,0.2346,0.2346,0.2346,0.2346,0.2346,0.2346),

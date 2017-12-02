@@ -1,7 +1,7 @@
 # A class for more securely handling our song data when it is outside of the data base. Less
-# potential for indexing errors compared with using other storage objects.  Also automatically
+# potential for indexing errors compared with using other storage objects.  Also provides
 # checks when a song is created that it also has all the required attributes populated and can 
-# be entered in the DataBase.  Check value of Song.hasData before any insert/analysis operations.
+# be entered in the DataBase.  Check value of Song.isValid() before any insert/analysis operations.
 
 class Song:
 	def __init__(self, song_dictionary=None):
@@ -26,7 +26,7 @@ class Song:
 			"valence" : None}
 		if not song_dictionary is None:
 			self.fromDict(song_dictionary)
-			self.hasData = self.validForDatabase()
+
 
 	def fromDict(self, song_dictionary):
 		for key, value in song_dictionary.iteritems():
@@ -38,7 +38,7 @@ class Song:
 			if attributeName in self.attributes.keys():
 				self.attributes[attributeName] = value
 
-	def validForDatabase(self):
+	def isValid(self):
 		requiredAttributes = [
 			'title', 
 			'artist_name',
@@ -55,6 +55,8 @@ class Song:
 			if self.attributes[attributeName] is None:
 				return False
 		return True
+
+
 
 
 
