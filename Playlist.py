@@ -31,6 +31,7 @@ class Playlist:
         self.playlist_tempo = None
         # A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).
         self.playlist_valence = None
+        self.normalized_aggregate_vector = None
 
 
     def get_playlist(self):
@@ -57,8 +58,8 @@ class Playlist:
                 self.playlist_accousticness = attributes[0]
                 self.playlist_dancibility = attributes[1]
                 self.playlist_energy = attributes[2]
-                self.playlist_loudness = attributes[3]
-                self.playlist_instrumentalness = attributes[4]
+                self.playlist_instrumentalness = attributes[3]
+                self.playlist_loudness = attributes[4]
                 self.playlist_speechness = attributes[5]
                 self.playlist_tempo = attributes[6]
                 self.playlist_valence = attributes[7]
@@ -73,7 +74,7 @@ class Playlist:
         speechiness = 0
         tempo = 0
         valence = 0
-        for element in range(0, len(self.playlist_song_names)):
+        for element in range(0, len(self.playlist_song_names)-1):
             accousticness += self.playlist_accousticness[element]
             dancibility += self.playlist_dancibility[element]
             energy += self.playlist_energy[element]
@@ -84,6 +85,19 @@ class Playlist:
             valence += self.playlist_valence[element]
 
         self.playlist_attribute_vector = [accousticness/len(self.playlist_accousticness), dancibility/len(self.playlist_dancibility), energy/len(self.playlist_energy), instrumentalness/len(self.playlist_instrumentalness), loudness/len(self.playlist_loudness), speechiness/len(self.playlist_speechness), tempo/len(self.playlist_tempo), valence/len(self.playlist_valence)]
+
+
+    def generate_normalized_aggregate_vector(self):
+        acousticness = self.playlist_attribute_vector[0]
+        danceability = self.playlist_attribute_vector[1]
+        energy = self.playlist_attribute_vector[2]
+        instrumentalness = self.playlist_attribute_vector[3]
+        loudness = (self.playlist_attribute_vector[4]+60)/60.0
+        speechiness = self.playlist_attribute_vector[5]
+        tempo = self.playlist_attribute_vector[6]/240.0
+        valence = self.playlist_attribute_vector[7]
+
+        self.normalized_aggregate_vector = [acousticness, danceability, energy, instrumentalness, loudness, speechiness, tempo, valence]
 
 
     def find_cluster(self):

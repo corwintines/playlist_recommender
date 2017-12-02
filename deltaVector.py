@@ -1,5 +1,5 @@
 import numpy as np
-import os 
+import os
 import Song
 import pickle
 
@@ -21,7 +21,7 @@ def normalize_from_pickle(in_filepath):
 	with open(in_filepath,'rb') as f:
 		song_list = pickle.load(f)
 
-		outpath = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/training_data/pickle/normalized'
+		outpath = os.path.join(os.path.dirname(os.path.realpath(__file__)),'training_data', 'pickle', 'normalized')
 		outfile = os.path.join(outpath,"normalized_"+os.path.basename(in_filepath))
 		outf = open(outfile, 'wb')
 		normalized_song_list = normalize(song_list)
@@ -34,7 +34,7 @@ def findAverage_from_pickle(in_filepath):
 	inf = open(in_filepath,'rb')
 	song_list = pickle.load(inf)
 	inf.close()
-	outpath = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/training_data/pickle/normalized'
+	outpath = os.path.join(os.path.dirname(os.path.realpath(__file__)),'training_data', 'pickle', 'normalized')
 	outfile = os.path.join(outpath,"agg_"+os.path.basename(in_filepath))
 	outf = open(outfile, 'wb')
 	findAverage_song_list = findAverage(song_list)
@@ -48,7 +48,7 @@ def findDistance_from_pickle(in_filepath):
 	inf = open(in_filepath,'rb')
 	song_list = pickle.load(inf)
 	inf.close()
-	outpath = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/training_data/pickle/normalized'
+	outpath = os.path.join(os.path.dirname(os.path.realpath(__file__)),'training_data', 'pickle', 'normalized')
 	outfile = os.path.join(outpath,"distance_"+os.path.basename(in_filepath))
 	outf = open(outfile, 'wb')
 	findDistance_song_list = findDistance(song_list)
@@ -108,49 +108,49 @@ def normalize(song_list):
 	for song in song_list:
 		v = (song.attributes['danceability']-mindanceability)/(maxdanceability-mindanceability)
 		if(v == 0):
-			song.attributes['danceability'] = 0.0000001 
+			song.attributes['danceability'] = 0.0000001
 		else:
 			song.attributes['danceability'] = v
 
 		v = (song.attributes['energy']-minenergy)/(maxenergy-minenergy)
 		if(v == 0):
-			song.attributes['energy'] = 0.0000001 
+			song.attributes['energy'] = 0.0000001
 		else:
 			song.attributes['energy'] = v
 
 		v = (song.attributes['loudness']-minloudness)/(maxloudness-minloudness)
 		if(v == 0):
-			song.attributes['loudness'] = 0.0000001 
+			song.attributes['loudness'] = 0.0000001
 		else:
 			song.attributes['loudness'] = v
 
 		v = (song.attributes['accousticness']-minaccousticness)/(maxaccousticness-minaccousticness)
 		if(v == 0):
-			song.attributes['accousticness'] = 0.0000001 
+			song.attributes['accousticness'] = 0.0000001
 		else:
 			song.attributes['accousticness'] = v
 
 		v = (song.attributes['instrumentalness']-mininstrumentalness)/(maxinstrumentalness-mininstrumentalness)
 		if(v == 0):
-			song.attributes['instrumentalness'] = 0.0000001 
+			song.attributes['instrumentalness'] = 0.0000001
 		else:
 			song.attributes['instrumentalness'] = v
 
 		v = (song.attributes['speechiness']-minspeechiness)/(maxspeechiness-minspeechiness)
 		if(v == 0):
-			song.attributes['speechiness'] = 0.0000001 
+			song.attributes['speechiness'] = 0.0000001
 		else:
 			song.attributes['speechiness'] = v
 
 		v = (song.attributes['tempo']-mintempo)/(maxtempo-mintempo)
 		if(v == 0):
-			song.attributes['tempo'] = 0.0000001 
+			song.attributes['tempo'] = 0.0000001
 		else:
 			song.attributes['tempo'] = v
 
 		v = (song.attributes['valence']-minvalence)/(maxvalence-minvalence)
 		if(v == 0):
-			song.attributes['valence'] = 0.0000001 
+			song.attributes['valence'] = 0.0000001
 		else:
 			song.attributes['valence'] = v
 	return song_list
@@ -212,8 +212,3 @@ def findDistance(aggregate_song_list1, list1_name, aggregate_song_list2, list2_n
 # normalize_from_pickle('/Users/Yash/Desktop/playlist_recommender/song_list_pickles/Country.txt')
 # findAverage_from_pickle('/Users/Yash/Desktop/playlist_recommender/normalized_song_list_pickles/normalized_Country.txt')
 # findDistance_from_pickle('/Users/Yash/Desktop/playlist_recommender/findAverage_song_list_pickles/agg_normalized_Country.txt')
-
-
-
-
-	
