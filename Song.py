@@ -64,19 +64,19 @@ class Song:
 	def normalize(self):
 		if not (self.attributes['danceability'] is None):
 			self.attributes['danceability'] = (self.attributes['danceability']-0.0)/(1.0-0.0)
-		if not (self.attributes['danceability'] is None):
+		if not (self.attributes['energy'] is None):
 			self.attributes['energy'] = (self.attributes['energy']-0.0)/(1.0-0.0)
-		if not (self.attributes['danceability'] is None):
+		if not (self.attributes['loudness'] is None):
 			self.attributes['loudness'] = (self.attributes['loudness']- (-60.0))/(0.0-(-60.0))
-		if not (self.attributes['danceability'] is None):
+		if not (self.attributes['accousticness'] is None):
 			self.attributes['accousticness'] = (self.attributes['accousticness']-0.0)/(1.0-0.0)
-		if not (self.attributes['danceability'] is None):
+		if not (self.attributes['instrumentalness'] is None):
 			self.attributes['instrumentalness'] = (self.attributes['instrumentalness']-0.0)/(1.0-0.0)
-		if not (self.attributes['danceability'] is None):
+		if not (self.attributes['speechiness'] is None):
 			self.attributes['speechiness'] = (self.attributes['speechiness']-0.0)/(1.0-0.0)
-		if not (self.attributes['danceability'] is None):
+		if not (self.attributes['tempo'] is None):
 			self.attributes['tempo'] = max((self.attributes['tempo']-0.0)/(250.0-0.0),1.0)
-		if not (self.attributes['danceability'] is None):
+		if not (self.attributes['valence'] is None):
 			self.attributes['valence'] = (self.attributes['valence']-0.0)/(1.0-0.0)
 		self.isNormalized = True
 
