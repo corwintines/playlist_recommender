@@ -378,7 +378,7 @@ class Song_DB:
 		return self.executeQuery_Return(query,'Error executing select_By_Query()')
 
 	def select_Song_By_ClusterID(self, tableName, clusterID):
-		query = "SELECT * FROM "+tableName+" WHERE ClusterID="+str(clusterID)+";"
+		query = "SELECT * FROM "+tableName+" WHERE cluster_id="+str(clusterID)+";"
 		return self.executeQuery_Return(query,'Error executing select_Song_By_ClusterID()')
 
 
