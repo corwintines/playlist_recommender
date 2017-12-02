@@ -22,12 +22,15 @@ output_folder = os.path.join(dir_path,'training_data/pickle/songs_msd')
 # the name of the pickle txt file
 pickle_file_name = 'song_list_mined_from_hdf5.txt'
 
-out_path = os.path.join(output_folder,pickle_file_name)
-if not os.path.isdir(output_folder):
-	os.mkdir(output_folder)
+# out_path = os.path.join(output_folder,pickle_file_name)
+# if not os.path.isdir(output_folder):
+# 	os.mkdir(output_folder)
 
-if os.path.isdir(msd_original_data_folder):
-	song_list = hdf5_access_Luke.getSongs_MSD(msd_original_data_folder)
-	pickle_tools_Luke.writeToPickle(song_list, out_path)
-else:
-	print "Error: check file paths."
+# if os.path.isdir(msd_original_data_folder):
+# 	song_list = hdf5_access_Luke.getSongs_MSD(msd_original_data_folder)
+# 	pickle_tools_Luke.writeToPickle(song_list, out_path)
+# else:
+# 	print "Error: check file paths."
+
+
+song_list = hdf5_access_Luke.getSongs_MSD(msd_original_data_folder)
