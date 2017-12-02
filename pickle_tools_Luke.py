@@ -17,6 +17,7 @@ def returnObjectFromPickle(in_pickle_filepath):
 	if os.path.isfile(in_pickle_filepath):
 		try:
 			with open(in_pickle_filepath,'rb') as f:
+				print in_pickle_filepath
 				pickle_as_object = pickle.load(f)
 				print "...pickle read successful."
 				return pickle_as_object

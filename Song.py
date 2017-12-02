@@ -4,7 +4,7 @@
 # be entered in the DataBase.  Check value of Song.isValid() before any insert/analysis operations.
 
 class Song:
-	def __init__(self, song_dictionary=None):
+	def __init__(self, song_dictionary=None, normalize=True):
 		self.attributes = {
 			"accousticness" : None,
 			"artist_name" : None,
@@ -24,6 +24,8 @@ class Song:
 			"tempo" : None,
 			"title" : None,
 			"valence" : None}
+		self.normalize()
+		self.isNormalized = normalize
 		if not song_dictionary is None:
 			self.fromDict(song_dictionary)
 
@@ -37,6 +39,9 @@ class Song:
 				attributeName = 'cluster_id'
 			if attributeName in self.attributes.keys():
 				self.attributes[attributeName] = value
+
+	def isNormalized(self):
+		return self.isNormalized
 
 	def isValid(self):
 		requiredAttributes = [
@@ -55,6 +60,25 @@ class Song:
 			if self.attributes[attributeName] is None:
 				return False
 		return True
+
+	def normalize(self):
+		if not (self.attributes['danceability'] is None):
+			self.attributes['danceability'] = (self.attributes['danceability']-0.0)/(1.0-0.0)
+		if not (self.attributes['danceability'] is None):
+			self.attributes['energy'] = (self.attributes['energy']-0.0)/(1.0-0.0)
+		if not (self.attributes['danceability'] is None):
+			self.attributes['loudness'] = (self.attributes['loudness']- (-60.0))/(0.0-(-60.0))
+		if not (self.attributes['danceability'] is None):
+			self.attributes['accousticness'] = (self.attributes['accousticness']-0.0)/(1.0-0.0)
+		if not (self.attributes['danceability'] is None):
+			self.attributes['instrumentalness'] = (self.attributes['instrumentalness']-0.0)/(1.0-0.0)
+		if not (self.attributes['danceability'] is None):
+			self.attributes['speechiness'] = (self.attributes['speechiness']-0.0)/(1.0-0.0)
+		if not (self.attributes['danceability'] is None):
+			self.attributes['tempo'] = max((self.attributes['tempo']-0.0)/(250.0-0.0),1.0)
+		if not (self.attributes['danceability'] is None):
+			self.attributes['valence'] = (self.attributes['valence']-0.0)/(1.0-0.0)
+		self.isNormalized = True
 
 
 

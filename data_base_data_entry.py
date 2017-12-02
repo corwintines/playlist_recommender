@@ -4,21 +4,43 @@ import Song
 import Cluster
 import hdf5_access_Luke
 import pickle_tools_Luke
+import os
 
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-agg_normalized = os.path.join(dir_path,'training_data/pickle/agg_normalized')
-normalized = os.path.join(dir_path,'training_data/pickle/normalized')
-song_lists = os.path.join(dir_path,'training_data/pickle/song_lists')
-song_lists_with_recommended = os.path.join(dir_path,'training_data/pickle/song_lists_with_recommended')
-msd_original_data_folder = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/MillionSongSubset/data'
+# agg_normalized = os.path.join(dir_path,'training_data/pickle/agg_normalized')
+# normalized = os.path.join(dir_path,'training_data/pickle/normalized')
+# song_lists = os.path.join(dir_path,'training_data/pickle/song_lists')
+# song_lists_with_recommended = os.path.join(dir_path,'training_data/pickle/song_lists_with_recommended')
+# msd_original_data_folder = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/MillionSongSubset/data'
+
+# output_folder = os.path.join(dir_path,'training_data/pickle/songs_msd')
+# pickle_file_name = 'song_list_mined_from_hdf5.txt'
+# out_path = os.path.join(output_folder,pickle_file_name)
+
+fpath = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/training_data/pickle/song_lists/Country.txt'
+songlist = pickle_tools_Luke.returnObjectFromPickle(fpath)
+for song in songlist:
+	print song.attributes
+
+# msd_songs = pickle_tools_Luke.returnObjectFromPickle(out_path)
+# spotify_songs = pickle_tools_Luke.returnObjectFromPickle('/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/msd_data/all_song_data.txt')
+# title_list = []
+# for song in spotify_songs:
+# 	title = song[0]
+# 	title_list.append(title)
+# print title_list
+# for song in msd_songs:
+# 	if song.attributes['title'].lower().replace("'","").replace(" ","_") in 
 
 
-with Song_DB() as dbase:
+# with Song_DB() as dbase:
 	
-	song_list = hdf5_access_Luke.getSongs_MSD(msd_original_data_folder)
-	out_path = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/training_data/pickle/songs_msd/song_list_mined_from_hdf5.txt'
-	pickle_tools_Luke.writeToPickle(song_list, out_path)
+
+
+	# song_list = hdf5_access_Luke.getSongs_MSD(msd_original_data_folder)
+	# out_path = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/training_data/pickle/songs_msd/song_list_mined_from_hdf5.txt'
+	# pickle_tools_Luke.writeToPickle(song_list, out_path)
 	# print songs
 
 	# songs = pickle_tools_Luke.returnObjectFromPickle('/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/msd_data/all_song_data.txt')
