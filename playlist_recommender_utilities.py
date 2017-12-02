@@ -8,22 +8,23 @@ def gather_hundred_songs(playlist):
     hundred_songs = []
 
     find_cluster_index(playlist)
-    cluster_songs = get_cluster_songs(playlist.playlist_cluster_index)
-    hundred_closest_songs_indexes = get_closest_songs(playlist, cluster_songs)
-    for song_index in hundred_closest_songs_indexes:
-        hundred_songs.append(cluster_songs[song_index])
-
-    return hundred_songs
+    # cluster_songs = get_cluster_songs(playlist.playlist_cluster_index)
+    # hundred_closest_songs_indexes = get_closest_songs(playlist, cluster_songs)
+    # for song_index in hundred_closest_songs_indexes:
+    #     hundred_songs.append(cluster_songs[song_index])
+    #
+    # return hundred_songs
 
 
 def find_cluster_index(playlist):
     clusters_list = []
     with Song_DB() as dbase:
         clusters = dbase.select_By_Query(query="SELECT * FROM Cluster;")
-        for cluster in clusters:
-            c = Cluster({})
-
-    distance_clusters(playlist, clusters_list)
+        print clusters
+    #     for cluster in clusters:
+    #         c = Cluster({})
+    #
+    # distance_clusters(playlist, clusters_list)
 
 
 def distance_clusters(playlist, cluster_list):
