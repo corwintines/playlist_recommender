@@ -29,8 +29,8 @@ def produce_dataset(training_file):
 
 
 def main():
-    training_dataset = produce_dataset(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data', 'pickle', 'training_playlists', 'training_1.txt'))
-    test_dataset = produce_dataset(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data', 'pickle', 'test_playlists', 'test_1.txt'))
+    training_dataset = produce_dataset(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data', 'pickle', 'training_playlists', 'training_4.txt'))
+    test_dataset = produce_dataset(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data', 'pickle', 'test_playlists', 'test_4.txt'))
 
     settings = {
         # Required settings
@@ -46,13 +46,13 @@ def main():
         "weights_high": 0.1
     }
 
-    network = NeuralNet(settings)
+    network = NeuralNet.load_network_from_file( "%s.pkl" % "training54point1" )
     training_set = training_dataset
     test_set = test_dataset
     cost_function = cross_entropy_cost
 
-    RMSprop(network, training_set, test_set, cost_function, ERROR_LIMIT=0.1, max_iterations=100000, batch_size=1800)
-    network.save_network_to_file("%s.pkl" % "training1")
+    RMSprop(network, training_set, test_set, cost_function, ERROR_LIMIT=0.1, max_iterations=100000, batch_size=400)
+    network.save_network_to_file("%s.pkl" % "training2")
 
 
 main()
