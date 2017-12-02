@@ -53,12 +53,8 @@ class Playlist:
 
             data = {'song_uri': song_uris}
             attributes = requests.get('https://playlist-recommender.herokuapp.com/song_attributes', data)
-            print attributes.text
             if attributes.text != "Server Error":
                 attributes = attributes.json()
-                with open('/Users/lucasjakober/Documents/Semester 9/Combined Course Project/json_playlist_as_text.txt', 'w') as outfile:
-                    json.dump(attributes, outfile)
-
                 self.playlist_accousticness = attributes[0]
                 self.playlist_dancibility = attributes[1]
                 self.playlist_energy = attributes[2]
