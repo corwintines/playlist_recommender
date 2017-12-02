@@ -34,13 +34,19 @@ out_path = os.path.join(output_folder,pickle_file_name)
 # for song in msd_songs:
 # 	if song.attributes['title'].lower().replace("'","").replace(" ","_") in title_list:
 # 		print song.attributes['title']
-
+all_songs = []
 for subdir, dirs, files in os.walk(song_lists_with_recommended):
 	for file in files:
 		filepath = subdir + os.sep + file
+		if '.DS_Store' in filepath:
+			continue
 		songs_with_rec = pickle_tools_Luke.returnObjectFromPickle(filepath)
 		for song in songs_with_rec:
-			print song.attributes
+			all_songs.append(song)
+		print "added %d songs to all_songs[]"%len(songs_with_rec)
+
+print "dumping %d songs to: %s"%(len(all_songs),"all_songs_with_rec.txt")
+pickle_tools_Luke.writeToPickle(all_songs,os.path.join(song_lists_with_recommended,"all_songs_with_rec.txt"))
 
 
 # with Song_DB() as dbase:

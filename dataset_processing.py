@@ -57,30 +57,14 @@ def query_spotify_for_attributes():
 
     return MSD_song_final
 
-def combine_cluster_song_data(song_data, label_data):
-    combined_data = []
-    for elem in range(0, len(song_data)):
-        data = [
-        label_data[elem],
-        song_data[elem][0],
-        song_data[elem][1],
-        song_data[elem][7],
-        song_data[elem][2],
-        song_data[elem][3],
-        song_data[elem][8],
-        song_data[elem][4],
-        song_data[elem][5],
-        song_data[elem][9],
-        song_data[elem][10],
-        song_data[elem][11],
-        song_data[elem][12],
-        song_data[elem][6],
-        song_data[elem][13],
-        song_data[elem][14]
-        ]
-        combined_data.append(data)
-
-    return combined_data
+def combine_cluster_song_data(song_list, cluster_IDs_by_song_list_index):
+    clustered_songs = []
+    count = 0
+    for song in song_list:
+        song.attributes.update({'cluster_id': cluster_IDs_by_song_list_index[count]})
+        clustered_songs.append(song)
+        count+=1
+    return clustered_songs
 
 def pearson_correlation_data(data):
     correlation_data = []

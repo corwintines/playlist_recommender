@@ -6,14 +6,13 @@
 class Cluster:
 	def __init__(self, cluster_dictionary=None):
 		self.attributes = {
-			"accousticness" : None,
 			"cluster_id" : None,
+			"accousticness" : None,
+			"danceability" : None,
 			"energy" : None,
 			"instrumentalness" : None,
-			"loudness" : None,
-			"speechiness" : None
+			"valence" : None
 			}
-
 		if not cluster_dictionary is None:
 			self.fromDict(cluster_dictionary)
 
