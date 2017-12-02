@@ -4,7 +4,7 @@ import pickle
 import numpy
 import math
 
-pickles_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data','pickle','normalized','agg')
+pickles_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data','pickle','agg_normalized')
 
 
 def get_distance_between_playlist_types():
@@ -15,14 +15,14 @@ def get_distance_between_playlist_types():
 				filepath = subdir + os.sep + file
 				# deltaVector.normalize_from_pickle(filepath)
 				# deltaVector.findAverage_from_pickle(filepath)
-				aggregate_song_list1 = os.path.join(os.path.dirname(filepath),'agg_normalized_Fitness.txt')
+				aggregate_song_list1 = os.path.join(os.path.dirname(filepath),'agg_Fitness.txt')
 				in1 = open(aggregate_song_list1,'rb')
 				song_list_1 = pickle.load(in1)
 				in1.close()
 				in2 = open(filepath,'rb')
 				song_list_2 = pickle.load(in2)
 				in2.close()
-				difference_dict = deltaVector.findDistance(song_list_1, 'agg_normalized_Fitness.txt', song_list_2, os.path.basename(filepath))
+				difference_dict = deltaVector.findDistance(song_list_1, 'agg_Fitness.txt', song_list_2, os.path.basename(filepath))
 				distance = math.sqrt(
 					math.pow(difference_dict["accousticness"],2) +
 					math.pow(difference_dict['danceability'],2) +
@@ -55,11 +55,11 @@ def normalize_distance_values(playlist_distances):
 def apply_normalized_distances(playlist_distances):
 	iteration = 0
 	for key in playlist_distances:
-		if key == 'agg_normalized_R_B.txt':
+		if key == 'agg_R_B.txt':
 			song_file = 'R_B.txt'
 		else:
-			song_file = str(key.split('_')[2])
-		with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data', 'pickle', 'song_lists', song_file)) as data:
+			song_file = str(key.split('_')[1])
+		with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data', 'pickle', 'normalized', song_file)) as data:
 			song_data = pickle.load(data)
 			for song in song_data:
 				song.attributes.update({"rec_value":playlist_distances[key]})
@@ -93,10 +93,10 @@ def produce_training_test_playlists(playlist_distances):
 	training_10 = []
 
 	for key in playlist_distances:
-		if key == 'agg_normalized_R_B.txt':
+		if key == 'agg_R_B.txt':
 			song_file = 'R_B.txt'
 		else:
-			song_file = str(key.split('_')[2])
+			song_file = str(key.split('_')[1])
 		with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data', 'pickle', 'song_lists_with_recommended', song_file)) as data:
 			song_data = pickle.load(data)
 			for song in range(0, len(song_data)):
