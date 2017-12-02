@@ -14,7 +14,7 @@ base_playlist.generate_playlist_vector()
 base_playlist.generate_normalized_aggregate_vector()
 
 # Funtion to return the 100 closet songs to playlist normalized_aggregate_vectors
-#hundred_song_set =
+#hundred_song_set = gather_hunder_songs(base_playlist)
 
 # prediction_set = create_prediction_data(hundred_song_set)
 # network = NeuralNet.load_network_from_file( "%s.pkl" % "training54point1" )

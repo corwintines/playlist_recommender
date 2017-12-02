@@ -1,4 +1,17 @@
 from nimblenet.data_structures import Instance
+from Song import Song
+from sql_connector import *
+from Cluster import Cluster
+
+def gather_hundred_songs(playlist):
+    hundred_songs = []
+
+    find_cluster_index(playlist)
+
+
+
+def find_cluster_index(playlist):
+
 
 
 def create_processing_data(song_list):
