@@ -17,4 +17,9 @@ def create_processing_data(song_list):
 
 
 def generate_top_twentyfive(recommended_values, hundred_song_set):
-    print True
+    top_twentyfive = []
+    top_twentyfive_indexes = recommended_values.argsort()[:25]
+    for index in top_twentyfive_indexes:
+        top_twentyfive.append(hundred_song_set[index])
+
+    return top_twentyfive
