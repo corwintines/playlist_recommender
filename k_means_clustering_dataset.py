@@ -1,8 +1,8 @@
 from sklearn.cluster import KMeans
 import numpy as np
 
-def cluster_data(data):
-    attribute_data = extract_attribute_data(data)
+def cluster_data(song_list):
+    attribute_data = extract_attribute_data(song_list)
     # Takes the array of attributes for songs and clusters them
     attributes = np.array(attribute_data)
     kmeans = KMeans(n_clusters=10, random_state=0).fit(attributes)
@@ -23,9 +23,23 @@ def cluster_data(data):
     ]
     return labels, centroids_order
 
-def extract_attribute_data(data):
+energy               17
+accousticness        16
+danceability         5
+instrumentalness     4
+valence              4
+
+def extract_attribute_data(song_list):
     attribute_data = []
-    for element in range(0, len(data)):
+    for song in song_list:
+        accousticness = song.attributes['accousticness']
+        danceability = song.attributes['danceability']
+        instrumentalness = song.attributes['instrumentalness']
+        valence = []
+        ]
+        data_element = [
+        song.attributes[]]
+    for element in range(0, len(song_list)):
         data_element = [
         data[element][7],
         data[element][9],

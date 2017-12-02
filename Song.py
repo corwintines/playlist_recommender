@@ -80,9 +80,6 @@ class Song:
 		self.isNormalized = True
 
 
-
-
-
 # attribute_dictionary = {
 # 	"accousticness" : 0.4,
 # 	"artist_name" : 'test_artist',

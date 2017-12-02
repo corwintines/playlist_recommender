@@ -6,7 +6,6 @@ import math
 
 pickles_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'training_data','pickle','agg_normalized')
 
-
 def get_distance_between_playlist_types():
 	distance_dictonary = {}
 	for subdir, dirs, files in os.walk(pickles_folder):

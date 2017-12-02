@@ -8,38 +8,39 @@ import os
 import Playlist
 
 
-playlist = Playlist.Playlist(username='spotify', playlistname='37i9dQZF1DX76Wlfdnj7AP')
-playlist.get_playlist()
-print 'done'
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
+agg_normalized = os.path.join(dir_path,'training_data/pickle/agg_normalized')
 
-# dir_path = os.path.dirname(os.path.realpath(__file__))
-# agg_normalized = os.path.join(dir_path,'training_data/pickle/agg_normalized')
-# normalized = os.path.join(dir_path,'training_data/pickle/normalized')
-# song_lists = os.path.join(dir_path,'training_data/pickle/song_lists')
-# song_lists_with_recommended = os.path.join(dir_path,'training_data/pickle/song_lists_with_recommended')
-# msd_original_data_folder = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/MillionSongSubset/data'
+normalized = os.path.join(dir_path,'training_data/pickle/normalized')
 
-# output_folder = os.path.join(dir_path,'training_data/pickle/songs_msd')
-# pickle_file_name = 'song_list_mined_from_hdf5.txt'
-# out_path = os.path.join(output_folder,pickle_file_name)
+song_lists = os.path.join(dir_path,'training_data/pickle/song_lists')
 
-# fpath = '/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/training_data/pickle/song_lists/Country.txt'
-# songlist = pickle_tools_Luke.returnObjectFromPickle(fpath)
-# for song in songlist:
-# 	print song.attributes
+song_lists_with_recommended = os.path.join(dir_path,'training_data/pickle/song_lists_with_recommended')
 
+msd_original_data_folder = os.path.join(dir_path,'/MillionSongSubset/data')
+
+output_folder = os.path.join(dir_path,'training_data/pickle/songs_msd')
+pickle_file_name = 'song_list_mined_from_hdf5.txt'
+out_path = os.path.join(output_folder,pickle_file_name)
 
 
 # msd_songs = pickle_tools_Luke.returnObjectFromPickle(out_path)
-# spotify_songs = pickle_tools_Luke.returnObjectFromPickle('/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/msd_data/all_song_data.txt')
+# spotify_songs = pickle_tools_Luke.returnObjectFromPickle(os.path.join(dir_path,'msd_data/all_song_data.txt'))
 # title_list = []
 # for song in spotify_songs:
-# 	title = song[0]
+# 	title = song[0].lower().replace("'","").replace(" ","_")
 # 	title_list.append(title)
-# print title_list
 # for song in msd_songs:
-# 	if song.attributes['title'].lower().replace("'","").replace(" ","_") in 
+# 	if song.attributes['title'].lower().replace("'","").replace(" ","_") in title_list:
+# 		print song.attributes['title']
+
+for subdir, dirs, files in os.walk(song_lists_with_recommended):
+	for file in files:
+		filepath = subdir + os.sep + file
+		songs_with_rec = pickle_tools_Luke.returnObjectFromPickle(filepath)
+		for song in songs_with_rec:
+			print song.attributes
 
 
 # with Song_DB() as dbase:

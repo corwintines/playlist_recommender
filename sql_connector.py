@@ -94,6 +94,11 @@ class Song_DB:
 		if self.executeQuery_Bool(query,'Error deleting all Playlist_Compare records in DB'):
 			print "All records in Playlist_Compare table deleted."
 
+	def closestCluster(self, playlist_aggregate_vector):
+		query = "SELECT * FROM Cluster;"
+		centroids = self.select_By_Query(query)
+		print centroids
+
 	def createTable_Cluster(self):
 		query = (
 			"CREATE TABLE Cluster "
@@ -438,9 +443,6 @@ class Song_DB:
 
 
 
-
-
-
 ######### ********** FUNCTIONS FOR DATABASE DEMO ONLY ********** ######### 
 	def createTable_Song_Clustered_Index(self):
 		query = (
@@ -661,6 +663,11 @@ class Song_DB:
 			print "Select successful."
 
 # with Song_DB() as dbase:
+
+
+
+
+
 	# dbase.CLEAR_ALL_SONGS_IN_DB()
 	# dbase.CLEAR_ALL_PLAYLIST_COMPARE()
 	# dbase.createTable_Song()
