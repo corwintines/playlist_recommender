@@ -23,29 +23,14 @@ def cluster_data(song_list):
     ]
     return labels, centroids_order
 
-energy               17
-accousticness        16
-danceability         5
-instrumentalness     4
-valence              4
-
 def extract_attribute_data(song_list):
     attribute_data = []
     for song in song_list:
         accousticness = song.attributes['accousticness']
         danceability = song.attributes['danceability']
+        energy = song.attributes['energy']
         instrumentalness = song.attributes['instrumentalness']
-        valence = []
-        ]
-        data_element = [
-        song.attributes[]]
-    for element in range(0, len(song_list)):
-        data_element = [
-        data[element][7],
-        data[element][9],
-        data[element][10],
-        data[element][11],
-        data[element][12]
-        ]
+        valence = song.attributes['valence']
+        data_element = [accousticness,danceability,energy,instrumentalness,valence]
         attribute_data.append(data_element)
     return attribute_data

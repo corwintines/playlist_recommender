@@ -103,13 +103,13 @@ class Song_DB:
 		query = (
 			"CREATE TABLE Cluster "
 			"("
-			"ClusterID int(11) NOT NULL, "
-			"Accousticness decimal(12,8) NOT NULL, "
-			"Energy decimal(12,8) NOT NULL, "
-			"Instrumentalness decimal(12,8) NOT NULL, "
-			"Loudness decimal(12,8) NOT NULL, "
-			"Speechiness decimal(12,8) NOT NULL, "
-			"PRIMARY KEY (ClusterID) "
+			"cluster_id int(11) NOT NULL, "
+			"accousticness decimal(12,8) NOT NULL, "
+			"danceability decimal(12,8) NOT NULL, "
+			"energy decimal(12,8) NOT NULL, "
+			"instrumentalness decimal(12,8) NOT NULL, "
+			"valence decimal(12,8) NOT NULL, "
+			"PRIMARY KEY (cluster_id) "
 			") "
 			"ENGINE=InnoDB DEFAULT CHARSET=utf8; "
 			)
@@ -143,9 +143,9 @@ class Song_DB:
 			"CREATE TABLE Song "
 			"("
 			"song_db_id int(11) NOT NULL AUTO_INCREMENT, "
-			"cluster_id int(11) NOT NULL DEFAULT 9999, "
-			"title varchar(255) NOT NULL DEFAULT 'no title', "
-			"artist_name varchar(255) NOT NULL DEFAULT 'no artist', "
+			"cluster_id int(11) NOT NULL, "
+			"title varchar(255) NOT NULL, "
+			"artist_name varchar(255) NOT NULL, "
 			"from_playlist varchar(255), "
 			"accousticness decimal(12,8) NOT NULL, "
 			"artist_familiarity decimal(12,8), "
@@ -175,8 +175,8 @@ class Song_DB:
 			"("
 			"song_db_id int(11) NOT NULL AUTO_INCREMENT, "
 			"cluster_id int(11) NOT NULL DEFAULT 9999, "
-			"title varchar(255) NOT NULL DEFAULT 'no title', "
-			"artist_name varchar(255) NOT NULL DEFAULT 'no artist', "
+			"title varchar(255) NOT NULL, "
+			"artist_name varchar(255) NOT NULL, "
 			"from_playlist varchar(255), "
 			"accousticness decimal(12,8) NOT NULL, "
 			"artist_familiarity decimal(12,8), "
@@ -246,12 +246,12 @@ class Song_DB:
 			return
 		columns = (
 			"INSERT INTO Cluster "
-			"(ClusterID, "
-			"Accousticness, "
-			"Energy, "
-			"Instrumentalness, "
-			"Loudness, "
-			"Speechiness)"
+			"(cluster_id, "
+			"accousticness, "
+			"danceability, "
+			"energy, "
+			"instrumentalness, "
+			"valence)"
 			)
 		added_to_db = 0
 		for cluster in cluster_list:
@@ -264,13 +264,13 @@ class Song_DB:
 				"{4:.8f}, "
 				"{5:.8f} "
 				" ) ;".format(
-				cluster[0],
-				cluster[1],
-				cluster[2],
-				cluster[3],
-				cluster[4],
-				cluster[5])
-				)
+				cluster.attributes["cluster_id"], 
+				cluster.attributes["accousticness"],
+				cluster.attributes["danceability"],
+				cluster.attributes["energy"],
+				cluster.attributes["instrumentalness"],
+				cluster.attributes["valence"]
+				))
 			query = columns + values
 			if (self.executeQuery_Bool(query,'Error adding Cluster to DB')):	
 				self.connection.commit()
@@ -313,13 +313,17 @@ class Song_DB:
 				columns = "INSERT INTO Song ("
 				values = "VALUES ("
 				for attribute, value in song.attributes.iteritems():
+					if attribute == 'cluster_id':
+						value = int(value)
 					if value is None:
 						columns = columns + attribute + ", "
 						values = values + "NULL, "
 					elif isinstance(value,float):
 						columns = columns + attribute + ", "
 						values = values + "{0:.8f}, ".format(value)						
-					elif isinstance(value,str):
+					elif isinstance(value,str) or isinstance(value,unicode):
+						value = value.replace("'","")
+						value = value.encode(encoding="utf-8", errors="ignore")
 						columns = columns + attribute + ", "
 						values = values + "'{0}', ".format(value)
 					elif isinstance(value,int):
@@ -332,69 +336,6 @@ class Song_DB:
 					self.connection.commit()
 					songs_added += 1
 		print "successfully added %d of %d songs in song_list to DB"%(songs_added,len(song_list))
-
-		# columns = (
-		# 	"INSERT INTO Song "
-		# 	"(ClusterID, "
-		# 	"Title, "
-		# 	"Artist_Name, "
-		# 	"Accousticness, "
-		# 	"Artist_Familiarity, "
-		# 	"Artist_Hotness, "
-		# 	"Danceability, "
-		# 	"Duration, "
-		# 	"End_of_Fade_In, "
-		# 	"Energy, "
-		# 	"Instrumentalness, "
-		# 	"Loudness, "
-		# 	"Speechiness, "
-		# 	"Start_of_Fade_Out, "
-		# 	"Tempo, "
-		# 	"Valence) "
-		# 	)
-		# added_to_db = 0
-		# for song in song_list:	
-		# 	values = (
-		# 		"VALUES ("
-		# 		"{0}, "
-		# 		"'{1}', "
-		# 		"'{2}', "
-		# 		"{3:.8f}, "
-		# 		"{4:.8f}, "
-		# 		"{5:.8f}, "
-		# 		"{6:.8f}, "
-		# 		"{7:.8f}, "
-		# 		"{8:.8f}, "
-		# 		"{9:.8f}, "
-		# 		"{10:.8f}, "
-		# 		"{11:.8f}, "
-		# 		"{12:.8f}, "
-		# 		"{13:.8f}, "
-		# 		"{14:.8f}, "
-		# 		"{15:.8f} "
-		# 		" ) ;".format(
-		# 		song[0],
-		# 		song[1],
-		# 		song[2],
-		# 		song[3],
-		# 		song[4],
-		# 		song[5],
-		# 		song[6],
-		# 		song[7],
-		# 		song[8],
-		# 		song[9],
-		# 		song[10],
-		# 		song[11],
-		# 		song[12],
-		# 		song[13],
-		# 		song[14],
-		# 		song[15])
-		# 		)
-		# 	query = columns + values
-		# 	if (self.executeQuery_Bool(query,'Error adding song to DB')):
-		# 		self.connection.commit()
-		# 		added_to_db += 1
-		# print "successfully added %d of %d songs in song_list to DB"%(added_to_db,len(song_list))		
 
 	def insert_Training_Songs(self, song_list=[]):
 			if not song_list:
