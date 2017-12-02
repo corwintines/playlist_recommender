@@ -8,6 +8,7 @@ import h5py as h5
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+import Song
 
 # Functions for ALL HDF5 objects (File, Group and Dataset)
 def isFile(item):
@@ -48,29 +49,35 @@ def getNumAttributes(item):
 # Pass the path to your 'data' folder inside the MillionSongSubset on your computer
 def getSongs_MSD(MSD_data_folder_path):
 	rootdir	= MSD_data_folder_path
-	songList = []
+	song_list = []
+	count = 0
 	for subdir, dirs, files in os.walk(rootdir):
 		for file in files:
 			filepath = subdir + os.sep + file
 			if filepath.endswith(".h5"):
 				f = h5.File(filepath,"r")
 				songDict = getSongAttributes_MSD(f)
-				song = convertSongDictToTup(songDict)
-				songList.append(song)
-				# print song
-	return songList
+				song = Song.Song(songDict)
+				# song = convertSongDictToTup(songDict)
+				song_list.append(song)
+				count += 1
+				if count%500 == 0:
+					print "processed %d songs..."%count
+				# print song.attributes
+	print "Successfully extracted %d songs."%count
+	return song_list
 
 def getSongAttributes_MSD(h5file):
 	f = h5file
 	song_tup = ()
 	f_items = f.items()
 	songAttribtes = {
-		'artist' : None,
+		'artist_name' : None,
 		'artist_familiarity' : None,
 		'artist_hotness' : None,
 		'duration' : None,
-		'endOfFadeIn' : None,
-		'startOfFadeOut' : None,
+		'end_of_fade_in' : None,
+		'start_of_fade_out' : None,
 		'title' : None }
 	for item in f_items:
 		if isGroup(item[1]):
@@ -81,15 +88,15 @@ def getSongAttributes_MSD(h5file):
 					dataset_value = group_item[1]
 					if item[0] == 'metadata' and dataset_key == 'songs':
 						valueTup = getValue(dataset_value)[0]
-						songAttribtes['artist'] = valueTup[9]
+						songAttribtes['artist_name'] = valueTup[9]
 						songAttribtes['artist_familiarity'] = valueTup[2]
 						songAttribtes['artist_hotness'] = valueTup[3]
 						songAttribtes['title'] = valueTup[18]
 					if item[0] == 'analysis' and dataset_key == 'songs':
 						valueTup = getValue(dataset_value)[0]
 						songAttribtes['duration'] = valueTup[3]
-						songAttribtes['endOfFadeIn'] = valueTup[4]
-						songAttribtes['startOfFadeOut'] = valueTup[26]
+						songAttribtes['end_of_fade_in'] = valueTup[4]
+						songAttribtes['start_of_fade_out'] = valueTup[26]
 	return songAttribtes
 
 def convertSongDictToTup(songDict):
@@ -137,7 +144,7 @@ def test_level3():
 # level1()
 # level2()
 # level3()
-songs = getSongs_MSD('/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/MillionSongSubset/data')
+# songs = getSongs_MSD('/Users/lucasjakober/Documents/Semester 9/Combined Course Project/Code/playlist_recommender/MillionSongSubset/data')
 
 '''
 ****** Analysis tuple structure ******
