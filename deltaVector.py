@@ -79,22 +79,22 @@ def normalize(song_list):
 			tempo.append(song.attributes['tempo'])
 			valence.append(song.attributes['valence'])
 
-	mindanceability = min(danceability)
-	maxdanceability = max(danceability)
-	minenergy = min(energy)
-	maxenergy = max(energy)
-	minloudness = min(loudness)
-	maxloudness = max(loudness)
-	minaccousticness = min(accousticness)
-	maxaccousticness = max(accousticness)
-	mininstrumentalness = min(instrumentalness)
-	maxinstrumentalness = max(instrumentalness)
-	minspeechiness = min(speechiness)
-	maxspeechiness = max(speechiness)
-	mintempo = min(tempo)
-	maxtempo = max(tempo)
-	minvalence = min(valence)
-	maxvalence = max(valence)
+	mindanceability = 0.0
+	maxdanceability = 1.0
+	minenergy = 0.0
+	maxenergy = 1.0
+	minloudness = -60.0
+	maxloudness = 0.0
+	minaccousticness = 0.0
+	maxaccousticness = 1.0
+	mininstrumentalness = 0.0
+	maxinstrumentalness = 1.0
+	minspeechiness = 0.0
+	maxspeechiness = 1.0
+	mintempo = 0.0
+	maxtempo = 250.0
+	minvalence = 0.0
+	maxvalence = 1.0
 	danceability = []
 	energy = []
 	loudness = []
@@ -145,6 +145,8 @@ def normalize(song_list):
 		v = (song.attributes['tempo']-mintempo)/(maxtempo-mintempo)
 		if(v == 0):
 			song.attributes['tempo'] = 0.0000001 
+		elif(v > 1.0):
+			song.attributes['tempo'] = 1.0
 		else:
 			song.attributes['tempo'] = v
 
