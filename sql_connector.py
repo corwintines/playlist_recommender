@@ -12,7 +12,7 @@ import Playlist
 '''
 To access the database:
 
-		-> 'cred.py' file needs to be in .../playlist_recommender/ folder and populated with 
+		-> 'cred.py' file needs to be in .../playlist_recommender/ folder and populated with
 			your ssh and mysql usernames and passwords
 
 *** Important ***
@@ -41,9 +41,9 @@ class Song_DB:
 
 	def __enter__(self):
 		self.server = SSHTunnelForwarder(
-			(base64.b64decode(cred.getAddr()), int(base64.b64decode(cred.getAddr_port()))), 
-			ssh_password=base64.b64decode(cred.getPassword_SSH()), 
-			ssh_username=base64.b64decode(cred.getUsername_SSH()), 
+			(base64.b64decode(cred.getAddr()), int(base64.b64decode(cred.getAddr_port()))),
+			ssh_password=base64.b64decode(cred.getPassword_SSH()),
+			ssh_username=base64.b64decode(cred.getUsername_SSH()),
 			remote_bind_address=(base64.b64decode(cred.getRemoteAddr()), int(base64.b64decode(cred.getRemoteAddr_port())))
 			)
 		try:
@@ -53,17 +53,17 @@ class Song_DB:
 			print "Error: SSH DB server connection unsuccessful."
 		try:
 			self.connection = mysql.connector.connect(
-				host='127.0.0.1', 
-				port=self.server.local_bind_port, 
-				database='Song_DB', 
-				user=base64.b64decode(cred.getUsername_MySQL()), 
+				host='127.0.0.1',
+				port=self.server.local_bind_port,
+				database='Song_DB',
+				user=base64.b64decode(cred.getUsername_MySQL()),
 				passwd=base64.b64decode(cred.getPassword_MySQL()))
 			self.cursor = self.connection.cursor(buffered=True)
 			print "open connection: success\nopen cursor: success"
 			return self
 		except mysql.connector.Error as e:
 			print "Error making DB connection:", str(e)
-		
+
 	def __exit__(self, exc_type, exc_value, traceback):
 		try:
 			if not self.cursor is None:
@@ -217,7 +217,7 @@ class Song_DB:
 			print "Select successful."
 		except mysql.connector.Error as e:
 			print errorDescription+": "+str(e)
-		return result		
+		return result
 
 	def import_From_Playlist(self,playlist):
 		songs = []
@@ -264,7 +264,7 @@ class Song_DB:
 				"{4:.8f}, "
 				"{5:.8f} "
 				" ) ;".format(
-				cluster.attributes["cluster_id"], 
+				cluster.attributes["cluster_id"],
 				cluster.attributes["accousticness"],
 				cluster.attributes["danceability"],
 				cluster.attributes["energy"],
@@ -272,7 +272,7 @@ class Song_DB:
 				cluster.attributes["valence"]
 				))
 			query = columns + values
-			if (self.executeQuery_Bool(query,'Error adding Cluster to DB')):	
+			if (self.executeQuery_Bool(query,'Error adding Cluster to DB')):
 				self.connection.commit()
 				added_to_db += 1
 		print "successfully added %d of %d clusters in cluster_list to DB"%(added_to_db,len(cluster_list))
@@ -287,7 +287,7 @@ class Song_DB:
 				values = values + "NULL, "
 			elif isinstance(val,float):
 				columns = columns + attribute + ", "
-				values = values + "{0:.8f}, ".format(val)						
+				values = values + "{0:.8f}, ".format(val)
 			elif isinstance(val,str):
 				columns = columns + attribute + ", "
 				values = values + "'{0}', ".format(val)
@@ -320,7 +320,7 @@ class Song_DB:
 						values = values + "NULL, "
 					elif isinstance(value,float):
 						columns = columns + attribute + ", "
-						values = values + "{0:.8f}, ".format(value)						
+						values = values + "{0:.8f}, ".format(value)
 					elif isinstance(value,str) or isinstance(value,unicode):
 						value = value.replace("'","")
 						value = value.encode(encoding="utf-8", errors="ignore")
@@ -357,7 +357,7 @@ class Song_DB:
 							values = values + "NULL, "
 						elif isinstance(value,float):
 							columns = columns + attribute + ", "
-							values = values + "{0:.8f}, ".format(value)						
+							values = values + "{0:.8f}, ".format(value)
 						elif isinstance(value,str) or isinstance(value,unicode):
 							value = value.replace("'","")
 							value = value.encode(encoding="utf-8", errors="ignore")
@@ -383,225 +383,225 @@ class Song_DB:
 
 
 
-
-######### ********** FUNCTIONS FOR DATABASE DEMO ONLY ********** ######### 
-	def createTable_Song_Clustered_Index(self):
-		query = (
-			"CREATE TABLE Song_Clustered_Index "
-			"("
-			"song_DB_ID int(11) NOT NULL AUTO_INCREMENT, "
-			"ClusterID int(11) NOT NULL, "
-			"Title varchar(255) NOT NULL, "
-			"Artist_Name varchar(255) NOT NULL, "
-			"Accousticness decimal(12,8) NOT NULL, "
-			"Artist_Familiarity decimal(12,8) NOT NULL, "
-			"Artist_Hotness decimal(12,8) NOT NULL, "
-			"Danceability decimal(12,8) NOT NULL, "
-			"Duration decimal(12,8) NOT NULL, "
-			"End_of_Fade_In decimal(12,8) NOT NULL, "
-			"Energy decimal(12,8) NOT NULL, "
-			"Instrumentalness decimal(12,8) NOT NULL, "
-			"Loudness decimal(12,8) NOT NULL, "
-			"Speechiness decimal(12,8) NOT NULL, "
-			"Start_of_Fade_Out decimal(12,8) NOT NULL, "
-			"Tempo decimal(12,8) NOT NULL, "
-			"Valence decimal(12,8) NOT NULL, "
-			"PRIMARY KEY (song_DB_ID), "
-			"KEY Songs_ClusterID_INDEX (ClusterID)"
-			") "
-			"ENGINE=InnoDB AUTO_INCREMENT=86137 DEFAULT CHARSET=utf8; "
-			)
-		if self.executeQuery_Bool(query,'Error creating Song table in DB'):
-			print "Song table added."
-
-	def createTable_Song_No_Index(self):
-		query = (
-			"CREATE TABLE Song_No_Index "
-			"("
-			"song_DB_ID int(11) NOT NULL AUTO_INCREMENT, "
-			"ClusterID int(11) NOT NULL, "
-			"Title varchar(255) NOT NULL, "
-			"Artist_Name varchar(255) NOT NULL, "
-			"Accousticness decimal(12,8) NOT NULL, "
-			"Artist_Familiarity decimal(12,8) NOT NULL, "
-			"Artist_Hotness decimal(12,8) NOT NULL, "
-			"Danceability decimal(12,8) NOT NULL, "
-			"Duration decimal(12,8) NOT NULL, "
-			"End_of_Fade_In decimal(12,8) NOT NULL, "
-			"Energy decimal(12,8) NOT NULL, "
-			"Instrumentalness decimal(12,8) NOT NULL, "
-			"Loudness decimal(12,8) NOT NULL, "
-			"Speechiness decimal(12,8) NOT NULL, "
-			"Start_of_Fade_Out decimal(12,8) NOT NULL, "
-			"Tempo decimal(12,8) NOT NULL, "
-			"Valence decimal(12,8) NOT NULL, "
-			"PRIMARY KEY (song_DB_ID) "
-			") "
-			"ENGINE=InnoDB AUTO_INCREMENT=86137 DEFAULT CHARSET=utf8; "
-			)
-		if self.executeQuery_Bool(query,'Error creating Song table in DB'):
-			print "Song table added."
-
-	def delete_ALL_SONGS_IN_DB(self):
-		query = "TRUNCATE Song;"
-		if self.executeQuery_Bool(query,'Error deleting all songs from Song table in DB'):
-			print "All songs in Song table deleted."
-		query = "TRUNCATE Song_No_Index;"
-		if self.executeQuery_Bool(query,'Error deleting all songs from Song table in DB'):
-			print "All songs in Song table deleted."
-		
-		query = "TRUNCATE Song_Clustered_Index;"
-		if self.executeQuery_Bool(query,'Error deleting all songs from Song table in DB'):
-			print "All songs in Song table deleted."
-
-	def delete_ALL_CLUSTERS_IN_DB(self):
-		query = "TRUNCATE Cluster;"
-		if self.executeQuery_Bool(query,'Error deleting all clusters from Cluster table in DB'):
-			print "All clusters in Cluster table deleted."
-
-	def insert_Song_Clustered_Index(self, song_list=[]):
-		if not song_list:
-			print "song_list is empty"
-			return
-		columns = (
-			"INSERT INTO Song_Clustered_Index "
-			"(ClusterID, "
-			"Title, "
-			"Artist_Name, "
-			"Accousticness, "
-			"Artist_Familiarity, "
-			"Artist_Hotness, "
-			"Danceability, "
-			"Duration, "
-			"End_of_Fade_In, "
-			"Energy, "
-			"Instrumentalness, "
-			"Loudness, "
-			"Speechiness, "
-			"Start_of_Fade_Out, "
-			"Tempo, "
-			"Valence) "
-			)
-		added_to_db = 0
-		for song in song_list:	
-			values = (
-				"VALUES ("
-				"{0}, "
-				"'{1}', "
-				"'{2}', "
-				"{3:.8f}, "
-				"{4:.8f}, "
-				"{5:.8f}, "
-				"{6:.8f}, "
-				"{7:.8f}, "
-				"{8:.8f}, "
-				"{9:.8f}, "
-				"{10:.8f}, "
-				"{11:.8f}, "
-				"{12:.8f}, "
-				"{13:.8f}, "
-				"{14:.8f}, "
-				"{15:.8f} "
-				" ) ;".format(
-				song[0],
-				song[1],
-				song[2],
-				song[3],
-				song[4],
-				song[5],
-				song[6],
-				song[7],
-				song[8],
-				song[9],
-				song[10],
-				song[11],
-				song[12],
-				song[13],
-				song[14],
-				song[15])
-				)
-			query = columns + values
-			if (self.executeQuery_Bool(query,'Error adding song to DB')):
-				self.connection.commit()
-				added_to_db += 1
-		print "successfully added %d of %d songs in song_list to DB"%(added_to_db,len(song_list))
-
-	def insert_Song_No_Index(self, song_list=[]):
-		if not song_list:
-			print "song_list is empty"
-			return
-		columns = (
-			"INSERT INTO Song_No_Index "
-			"(ClusterID, "
-			"Title, "
-			"Artist_Name, "
-			"Accousticness, "
-			"Artist_Familiarity, "
-			"Artist_Hotness, "
-			"Danceability, "
-			"Duration, "
-			"End_of_Fade_In, "
-			"Energy, "
-			"Instrumentalness, "
-			"Loudness, "
-			"Speechiness, "
-			"Start_of_Fade_Out, "
-			"Tempo, "
-			"Valence) "
-			)
-		added_to_db = 0
-		for song in song_list:	
-			values = (
-				"VALUES ("
-				"{0}, "
-				"'{1}', "
-				"'{2}', "
-				"{3:.8f}, "
-				"{4:.8f}, "
-				"{5:.8f}, "
-				"{6:.8f}, "
-				"{7:.8f}, "
-				"{8:.8f}, "
-				"{9:.8f}, "
-				"{10:.8f}, "
-				"{11:.8f}, "
-				"{12:.8f}, "
-				"{13:.8f}, "
-				"{14:.8f}, "
-				"{15:.8f} "
-				" ) ;".format(
-				song[0],
-				song[1],
-				song[2],
-				song[3],
-				song[4],
-				song[5],
-				song[6],
-				song[7],
-				song[8],
-				song[9],
-				song[10],
-				song[11],
-				song[12],
-				song[13],
-				song[14],
-				song[15])
-				)
-			query = columns + values
-			if (self.executeQuery_Bool(query,'Error adding song to DB')):
-				self.connection.commit()
-				added_to_db += 1
-		print "successfully added %d of %d songs in song_list to DB"%(added_to_db,len(song_list))
-
-	def select_Song_By_ClusterID(self, tableName, clusterID):
-		query = "SELECT * FROM "+tableName+" WHERE ClusterID="+str(clusterID)+";"
-		if self.executeQuery_Bool(query,'Error selecting songs by ClusterID'):
-			print "Select successful."
-	
-	def select_Song_By_Other(self, tableName):
-		query = "SELECT song_DB_ID, ClusterID, Title FROM "+tableName+" WHERE Valence > 0.8;"
-		if self.executeQuery_Bool(query,'Error selecting songs by ClusterID'):
-			print "Select successful."
+#
+# ######### ********** FUNCTIONS FOR DATABASE DEMO ONLY ********** #########
+# 	def createTable_Song_Clustered_Index(self):
+# 		query = (
+# 			"CREATE TABLE Song_Clustered_Index "
+# 			"("
+# 			"song_DB_ID int(11) NOT NULL AUTO_INCREMENT, "
+# 			"ClusterID int(11) NOT NULL, "
+# 			"Title varchar(255) NOT NULL, "
+# 			"Artist_Name varchar(255) NOT NULL, "
+# 			"Accousticness decimal(12,8) NOT NULL, "
+# 			"Artist_Familiarity decimal(12,8) NOT NULL, "
+# 			"Artist_Hotness decimal(12,8) NOT NULL, "
+# 			"Danceability decimal(12,8) NOT NULL, "
+# 			"Duration decimal(12,8) NOT NULL, "
+# 			"End_of_Fade_In decimal(12,8) NOT NULL, "
+# 			"Energy decimal(12,8) NOT NULL, "
+# 			"Instrumentalness decimal(12,8) NOT NULL, "
+# 			"Loudness decimal(12,8) NOT NULL, "
+# 			"Speechiness decimal(12,8) NOT NULL, "
+# 			"Start_of_Fade_Out decimal(12,8) NOT NULL, "
+# 			"Tempo decimal(12,8) NOT NULL, "
+# 			"Valence decimal(12,8) NOT NULL, "
+# 			"PRIMARY KEY (song_DB_ID), "
+# 			"KEY Songs_ClusterID_INDEX (ClusterID)"
+# 			") "
+# 			"ENGINE=InnoDB AUTO_INCREMENT=86137 DEFAULT CHARSET=utf8; "
+# 			)
+# 		if self.executeQuery_Bool(query,'Error creating Song table in DB'):
+# 			print "Song table added."
+#
+# 	def createTable_Song_No_Index(self):
+# 		query = (
+# 			"CREATE TABLE Song_No_Index "
+# 			"("
+# 			"song_DB_ID int(11) NOT NULL AUTO_INCREMENT, "
+# 			"ClusterID int(11) NOT NULL, "
+# 			"Title varchar(255) NOT NULL, "
+# 			"Artist_Name varchar(255) NOT NULL, "
+# 			"Accousticness decimal(12,8) NOT NULL, "
+# 			"Artist_Familiarity decimal(12,8) NOT NULL, "
+# 			"Artist_Hotness decimal(12,8) NOT NULL, "
+# 			"Danceability decimal(12,8) NOT NULL, "
+# 			"Duration decimal(12,8) NOT NULL, "
+# 			"End_of_Fade_In decimal(12,8) NOT NULL, "
+# 			"Energy decimal(12,8) NOT NULL, "
+# 			"Instrumentalness decimal(12,8) NOT NULL, "
+# 			"Loudness decimal(12,8) NOT NULL, "
+# 			"Speechiness decimal(12,8) NOT NULL, "
+# 			"Start_of_Fade_Out decimal(12,8) NOT NULL, "
+# 			"Tempo decimal(12,8) NOT NULL, "
+# 			"Valence decimal(12,8) NOT NULL, "
+# 			"PRIMARY KEY (song_DB_ID) "
+# 			") "
+# 			"ENGINE=InnoDB AUTO_INCREMENT=86137 DEFAULT CHARSET=utf8; "
+# 			)
+# 		if self.executeQuery_Bool(query,'Error creating Song table in DB'):
+# 			print "Song table added."
+#
+# 	def delete_ALL_SONGS_IN_DB(self):
+# 		query = "TRUNCATE Song;"
+# 		if self.executeQuery_Bool(query,'Error deleting all songs from Song table in DB'):
+# 			print "All songs in Song table deleted."
+# 		query = "TRUNCATE Song_No_Index;"
+# 		if self.executeQuery_Bool(query,'Error deleting all songs from Song table in DB'):
+# 			print "All songs in Song table deleted."
+#
+# 		query = "TRUNCATE Song_Clustered_Index;"
+# 		if self.executeQuery_Bool(query,'Error deleting all songs from Song table in DB'):
+# 			print "All songs in Song table deleted."
+#
+# 	def delete_ALL_CLUSTERS_IN_DB(self):
+# 		query = "TRUNCATE Cluster;"
+# 		if self.executeQuery_Bool(query,'Error deleting all clusters from Cluster table in DB'):
+# 			print "All clusters in Cluster table deleted."
+#
+# 	def insert_Song_Clustered_Index(self, song_list=[]):
+# 		if not song_list:
+# 			print "song_list is empty"
+# 			return
+# 		columns = (
+# 			"INSERT INTO Song_Clustered_Index "
+# 			"(ClusterID, "
+# 			"Title, "
+# 			"Artist_Name, "
+# 			"Accousticness, "
+# 			"Artist_Familiarity, "
+# 			"Artist_Hotness, "
+# 			"Danceability, "
+# 			"Duration, "
+# 			"End_of_Fade_In, "
+# 			"Energy, "
+# 			"Instrumentalness, "
+# 			"Loudness, "
+# 			"Speechiness, "
+# 			"Start_of_Fade_Out, "
+# 			"Tempo, "
+# 			"Valence) "
+# 			)
+# 		added_to_db = 0
+# 		for song in song_list:
+# 			values = (
+# 				"VALUES ("
+# 				"{0}, "
+# 				"'{1}', "
+# 				"'{2}', "
+# 				"{3:.8f}, "
+# 				"{4:.8f}, "
+# 				"{5:.8f}, "
+# 				"{6:.8f}, "
+# 				"{7:.8f}, "
+# 				"{8:.8f}, "
+# 				"{9:.8f}, "
+# 				"{10:.8f}, "
+# 				"{11:.8f}, "
+# 				"{12:.8f}, "
+# 				"{13:.8f}, "
+# 				"{14:.8f}, "
+# 				"{15:.8f} "
+# 				" ) ;".format(
+# 				song[0],
+# 				song[1],
+# 				song[2],
+# 				song[3],
+# 				song[4],
+# 				song[5],
+# 				song[6],
+# 				song[7],
+# 				song[8],
+# 				song[9],
+# 				song[10],
+# 				song[11],
+# 				song[12],
+# 				song[13],
+# 				song[14],
+# 				song[15])
+# 				)
+# 			query = columns + values
+# 			if (self.executeQuery_Bool(query,'Error adding song to DB')):
+# 				self.connection.commit()
+# 				added_to_db += 1
+# 		print "successfully added %d of %d songs in song_list to DB"%(added_to_db,len(song_list))
+#
+# 	def insert_Song_No_Index(self, song_list=[]):
+# 		if not song_list:
+# 			print "song_list is empty"
+# 			return
+# 		columns = (
+# 			"INSERT INTO Song_No_Index "
+# 			"(ClusterID, "
+# 			"Title, "
+# 			"Artist_Name, "
+# 			"Accousticness, "
+# 			"Artist_Familiarity, "
+# 			"Artist_Hotness, "
+# 			"Danceability, "
+# 			"Duration, "
+# 			"End_of_Fade_In, "
+# 			"Energy, "
+# 			"Instrumentalness, "
+# 			"Loudness, "
+# 			"Speechiness, "
+# 			"Start_of_Fade_Out, "
+# 			"Tempo, "
+# 			"Valence) "
+# 			)
+# 		added_to_db = 0
+# 		for song in song_list:
+# 			values = (
+# 				"VALUES ("
+# 				"{0}, "
+# 				"'{1}', "
+# 				"'{2}', "
+# 				"{3:.8f}, "
+# 				"{4:.8f}, "
+# 				"{5:.8f}, "
+# 				"{6:.8f}, "
+# 				"{7:.8f}, "
+# 				"{8:.8f}, "
+# 				"{9:.8f}, "
+# 				"{10:.8f}, "
+# 				"{11:.8f}, "
+# 				"{12:.8f}, "
+# 				"{13:.8f}, "
+# 				"{14:.8f}, "
+# 				"{15:.8f} "
+# 				" ) ;".format(
+# 				song[0],
+# 				song[1],
+# 				song[2],
+# 				song[3],
+# 				song[4],
+# 				song[5],
+# 				song[6],
+# 				song[7],
+# 				song[8],
+# 				song[9],
+# 				song[10],
+# 				song[11],
+# 				song[12],
+# 				song[13],
+# 				song[14],
+# 				song[15])
+# 				)
+# 			query = columns + values
+# 			if (self.executeQuery_Bool(query,'Error adding song to DB')):
+# 				self.connection.commit()
+# 				added_to_db += 1
+# 		print "successfully added %d of %d songs in song_list to DB"%(added_to_db,len(song_list))
+#
+# 	def select_Song_By_ClusterID(self, tableName, clusterID):
+# 		query = "SELECT * FROM "+tableName+" WHERE cluster_id="+str(clusterID)+";"
+# 		if self.executeQuery_Bool(query,'Error selecting songs by cluster_id'):
+# 			print "Select successful."
+#
+# 	def select_Song_By_Other(self, tableName):
+# 		query = "SELECT song_DB_ID, ClusterID, Title FROM "+tableName+" WHERE Valence > 0.8;"
+# 		if self.executeQuery_Bool(query,'Error selecting songs by ClusterID'):
+# 			print "Select successful."
 
 # with Song_DB() as dbase:
 
@@ -683,7 +683,7 @@ class Song_DB:
 
 	# dbase.delete_ALL_CLUSTERS_IN_DB()
 	# dbase.delete_ALL_SONGS_IN_DB()
-	
+
 	# decimal.Decimal(random.randrange(10000))/100
 
 
@@ -696,7 +696,7 @@ class Song_DB:
 	# 	for song in song_list:
 	# 		song[1] = song[1].replace("'","")
 	# 		song[2] = song[2].replace("'","")
-		
+
 # insert Cluster backup
 	# def createTable_Cluster(self):
 	# 	query = (
@@ -812,20 +812,7 @@ class Song_DB:
 	# 		# 	cluster[13])
 	# 		# 	)
 	# 		query = columns + values
-	# 		if (self.executeQuery_Bool(query,'Error adding Cluster to DB')):	
+	# 		if (self.executeQuery_Bool(query,'Error adding Cluster to DB')):
 	# 			self.connection.commit()
 	# 			added_to_db += 1
 	# 	print "successfully added %d of %d clusters in cluster_list to DB"%(added_to_db,len(cluster_list))
-
-
-
-
-
-
-
-
-
-
-
-
-
