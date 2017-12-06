@@ -1,4 +1,4 @@
-# Some hand pickle methods I made for our project
+# Some pickle methods I made for our project
 
 import os
 import pickle
